@@ -104,7 +104,7 @@ server {
     server_name your-domain.com;
     
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:5005;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -125,7 +125,7 @@ server {
 
 ### Environment Variables
 ```bash
-PORT=3000
+PORT=5005
 NODE_ENV=production
 MAX_PARTICIPANTS=50
 RECORDING_ENABLED=true
