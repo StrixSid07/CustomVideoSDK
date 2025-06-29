@@ -125,22 +125,141 @@ pm2 start server/index.js --name "video-sdk"
 pm2 startup
 pm2 save
 ```
-### Step 3: Configure Nginx (Optional)
+### Step 3: Configure Nginx & SSL
+```bash
+# Install Nginx
+apt install nginx -y
+
+# Create Nginx configuration for your domain
+sudo nano /etc/nginx/sites-available/videosdk
+```
+
+**Add this configuration to `/etc/nginx/sites-available/videosdk`:**
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com;
+    server_name videosdk.genisisserver.com www.videosdk.genisisserver.com;
     
+    # Redirect HTTP to HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name videosdk.genisisserver.com www.videosdk.genisisserver.com;
+    
+    # SSL Configuration (will be added by Certbot)
+    # ssl_certificate /etc/letsencrypt/live/videosdk.genisisserver.com/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/videosdk.genisisserver.com/privkey.pem;
+    
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
+    
+    # Proxy to Node.js application
     location / {
         proxy_pass http://localhost:5005;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+    }
+    
+    # WebSocket support for Socket.IO
+    location /socket.io/ {
+        proxy_pass http://localhost:5005;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    # Static files caching
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
     }
 }
 ```
+
+**Enable the site and configure SSL:**
+```bash
+# Enable the Nginx site
+sudo ln -s /etc/nginx/sites-available/videosdk /etc/nginx/sites-enabled/
+
+# Test Nginx configuration
+sudo nginx -t
+
+# Reload Nginx
+sudo systemctl reload nginx
+
+# Install Certbot for SSL certificates
+sudo apt install snapd -y
+sudo snap install core; sudo snap refresh core
+sudo snap install --classic certbot
+
+# Create symlink for certbot command
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+# Get SSL certificate for your domain
+sudo certbot --nginx -d videosdk.genisisserver.com -d www.videosdk.genisisserver.com --email support@genisisserver.com --agree-tos --no-eff-email
+
+# Verify SSL auto-renewal
+sudo certbot renew --dry-run
+
+# Restart services
+sudo systemctl restart nginx
+sudo systemctl restart pm2-root
+```
+
+**For custom domain, replace `videosdk.genisisserver.com` with your domain:**
+```bash
+# Example for custom domain setup
+sudo nano /etc/nginx/sites-available/videosdk
+# Replace: videosdk.genisisserver.com with yourdomain.com
+# Replace: support@genisisserver.com with your-email@yourdomain.com
+
+# Then run certbot with your domain:
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com --email your-email@yourdomain.com --agree-tos --no-eff-email
+```
+
+### Step 4: Validate Deployment
+```bash
+# Check if all services are running
+sudo systemctl status nginx
+sudo pm2 status
+
+# Test domain access
+curl -I https://videosdk.genisisserver.com
+curl -I https://videosdk.genisisserver.com/health
+
+# Test WebSocket connection
+curl -I https://videosdk.genisisserver.com/socket.io/
+
+# View application logs
+sudo pm2 logs video-sdk
+
+# Monitor real-time logs
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+```
+
+**🎉 Access Your Video SDK:**
+- **Host Dashboard:** `https://videosdk.genisisserver.com/host.html`
+- **Client Viewer:** `https://videosdk.genisisserver.com/client.html`
+- **Debug Tool:** `https://videosdk.genisisserver.com/debug.html`
+- **Health Check:** `https://videosdk.genisisserver.com/health`
 
 ## 📊 API Endpoints
 
@@ -244,6 +363,39 @@ The SDK provides built-in monitoring:
 3. **Connection failed**: Check firewall settings
 4. **High latency**: Review network optimization settings
 
+### Nginx & SSL Issues
+```bash
+# Check Nginx status
+sudo systemctl status nginx
+
+# Test Nginx configuration
+sudo nginx -t
+
+# View Nginx error logs
+sudo tail -f /var/log/nginx/error.log
+
+# Check SSL certificate status
+sudo certbot certificates
+
+# Renew SSL certificate manually
+sudo certbot renew
+
+# Check if ports are open
+sudo netstat -tlnp | grep :80
+sudo netstat -tlnp | grep :443
+sudo netstat -tlnp | grep :5005
+
+# Restart all services
+sudo systemctl restart nginx
+sudo systemctl restart pm2-root
+
+# Check firewall settings
+sudo ufw status
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 5005/tcp
+```
+
 ### Debug Mode
 ```javascript
 sdk.SetLogFilter(LOG_FILTER.DEBUG | LOG_FILTER.INFO);
@@ -286,6 +438,71 @@ MIT License - Use freely in commercial projects
 - **Releases:** [https://github.com/StrixSid07/CustomVideoSDK/releases](https://github.com/StrixSid07/CustomVideoSDK/releases)
 
 ### **Documentation Links**
+
+## 📋 **Quick Command Reference**
+
+### **Complete Nginx + SSL Setup (Copy & Paste)**
+```bash
+# Install Nginx
+sudo apt install nginx -y
+
+# Create Nginx config
+sudo nano /etc/nginx/sites-available/videosdk
+# (Copy the Nginx config from Step 3 above)
+
+# Enable site
+sudo ln -s /etc/nginx/sites-available/videosdk /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+
+# Install Certbot & Get SSL
+sudo apt install snapd -y
+sudo snap install core; sudo snap refresh core
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+# Get certificate for videosdk.genisisserver.com
+sudo certbot --nginx -d videosdk.genisisserver.com -d www.videosdk.genisisserver.com --email support@genisisserver.com --agree-tos --no-eff-email
+
+# Restart services
+sudo systemctl restart nginx
+sudo systemctl restart pm2-root
+```
+
+### **Service Management Commands**
+```bash
+# PM2 Commands
+pm2 status                    # Check app status
+pm2 logs video-sdk           # View logs
+pm2 restart video-sdk        # Restart app
+pm2 reload video-sdk         # Zero-downtime reload
+pm2 monit                    # Monitor resources
+
+# Nginx Commands
+sudo systemctl status nginx   # Check Nginx status
+sudo nginx -t                # Test config
+sudo systemctl reload nginx  # Reload config
+
+# SSL Certificate Management
+sudo certbot certificates     # Check certificates
+sudo certbot renew          # Renew certificates
+sudo certbot renew --dry-run # Test renewal
+
+# Firewall
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 5005/tcp
+```
+
+### **Health Check URLs**
+```bash
+# Test these URLs after deployment:
+https://videosdk.genisisserver.com/health
+https://videosdk.genisisserver.com/api/info
+https://videosdk.genisisserver.com/host.html
+https://videosdk.genisisserver.com/client.html
+https://videosdk.genisisserver.com/debug.html
+```
 
 ---
 
