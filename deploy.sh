@@ -65,17 +65,19 @@ cd $APP_DIR
 
 # Clone or copy application code
 echo -e "${YELLOW}📥 Deploying application code...${NC}"
-# If you have this in a git repository, uncomment and modify:
-# git clone https://github.com/your-repo/custom-video-sdk.git .
+# Clone the Custom Video SDK repository:
+git clone https://github.com/StrixSid07/CustomVideoSDK.git .
 # 
-# For videosdk.genisisserver.com, use:
-# git clone https://github.com/genisisserver/custom-video-sdk.git .
+# Alternative: If you have a fork, modify the URL:
+# git clone https://github.com/your-username/CustomVideoSDK.git .
 
-# For now, we'll create the structure (assuming code is already copied)
+# Verify the repository was cloned successfully
 if [ ! -f "package.json" ]; then
-    echo -e "${RED}❌ Application code not found. Please copy your code to $APP_DIR${NC}"
+    echo -e "${RED}❌ Git clone failed or package.json not found. Check repository URL and permissions.${NC}"
     exit 1
 fi
+
+echo -e "${GREEN}✅ Custom Video SDK repository cloned successfully${NC}"
 
 # Install dependencies
 echo -e "${YELLOW}📦 Installing application dependencies...${NC}"

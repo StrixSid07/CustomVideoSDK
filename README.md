@@ -1,6 +1,13 @@
 # Custom Video SDK for Gaming
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-StrixSid07%2FCustomVideoSDK-blue?logo=github)](https://github.com/StrixSid07/CustomVideoSDK)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/StrixSid07/CustomVideoSDK/blob/main/LICENSE)
+[![Stars](https://img.shields.io/github/stars/StrixSid07/CustomVideoSDK?style=social)](https://github.com/StrixSid07/CustomVideoSDK)
+
 A powerful, self-hosted video calling SDK built with Node.js and WebRTC that replicates Agora's functionality. Perfect for mobile gaming applications requiring real-time video communication.
+
+**🌐 Live Demo:** [videosdk.genisisserver.com](https://videosdk.genisisserver.com)  
+**📁 Source Code:** [github.com/StrixSid07/CustomVideoSDK](https://github.com/StrixSid07/CustomVideoSDK)
 
 ## 🚀 Features
 
@@ -20,11 +27,32 @@ A powerful, self-hosted video calling SDK built with Node.js and WebRTC that rep
 - SSL Certificate (for HTTPS/WSS)
 - Domain name (recommended)
 
+## ⚡ **Quick Start**
+
+```bash
+# Clone the repository
+git clone https://github.com/StrixSid07/CustomVideoSDK.git
+cd CustomVideoSDK
+
+# Install dependencies
+npm install
+
+# Start the server
+npm start
+
+# Access the dashboard
+# Open: http://localhost:5005/host.html
+```
+
 ## 🛠️ Installation
 
 1. **Clone and Install Dependencies**
 ```bash
+# Clone the repository
+git clone https://github.com/StrixSid07/CustomVideoSDK.git
 cd CustomVideoSDK
+
+# Install dependencies
 npm install
 ```
 
@@ -85,8 +113,8 @@ npm install -g pm2
 
 ### Step 2: Deploy Application
 ```bash
-# Clone your code to VPS
-git clone your-repo-url /var/www/video-sdk
+# Clone the Custom Video SDK to VPS
+git clone https://github.com/StrixSid07/CustomVideoSDK.git /var/www/video-sdk
 cd /var/www/video-sdk
 
 # Install dependencies
@@ -251,10 +279,13 @@ MIT License - Use freely in commercial projects
 
 ## 🆘 Support
 
-- GitHub Issues: Report bugs and feature requests
-- Documentation: Comprehensive API docs
-- Examples: Multiple integration examples
-- Community: Discord/Slack support channel
+### **GitHub Repository**
+- **Source Code:** [https://github.com/StrixSid07/CustomVideoSDK](https://github.com/StrixSid07/CustomVideoSDK)
+- **Issues & Bug Reports:** [https://github.com/StrixSid07/CustomVideoSDK/issues](https://github.com/StrixSid07/CustomVideoSDK/issues)
+- **Contributions:** [https://github.com/StrixSid07/CustomVideoSDK/pulls](https://github.com/StrixSid07/CustomVideoSDK/pulls)
+- **Releases:** [https://github.com/StrixSid07/CustomVideoSDK/releases](https://github.com/StrixSid07/CustomVideoSDK/releases)
+
+### **Documentation Links**
 
 ---
 
