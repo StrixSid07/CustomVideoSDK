@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  video-sdk-server:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MAX_PARTICIPANTS=50
+      - RECORDING_ENABLED=true
+    volumes:
+      - ./recordings:/app/recordings
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - video-sdk-server
+    restart: unless-stopped 

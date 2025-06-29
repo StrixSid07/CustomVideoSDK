@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📺 Viewer - Watch Stream</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; margin-bottom: 30px; opacity: 0.9; }
+        .video-container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .stream-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        input {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 5px;
+            min-width: 200px;
+        }
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .stream-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .info-item {
+            text-align: center;
+        }
+        .info-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .waiting-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: #ccc;
+        }
+        .waiting-screen .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .chat-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .chat-message {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            font-size: 14px;
+        }
+        .quality-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .quality-btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .quality-btn.active {
+            background: #3498db;
+            border-color: #3498db;
+        }
+        .viewer-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+        .volume-slider {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📺 Stream Viewer</h1>
+        <p class="subtitle">Watch live streams from gamers and content creators</p>
+        
+        <div class="stream-info">
+            <div class="info-item">
+                <div>Stream Status</div>
+                <div class="info-value" id="streamStatus">Offline</div>
+            </div>
+            <div class="info-item">
+                <div>Host</div>
+                <div class="info-value" id="hostName">Unknown</div>
+            </div>
+            <div class="info-item">
+                <div>Viewers</div>
+                <div class="info-value" id="viewerCount">0</div>
+            </div>
+            <div class="info-item">
+                <div>Quality</div>
+                <div class="info-value" id="streamQuality">Auto</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;" id="joinSection">
+            <input type="text" id="roomInput" placeholder="Enter room code (e.g. my-stream)" value="">
+            <input type="text" id="nameInput" placeholder="Your viewer name" value="Viewer">
+        </div>
+
+        <div class="controls" id="preJoinControls">
+            <button class="btn btn-primary" onclick="joinStream()">📺 Join Stream</button>
+        </div>
+
+        <div class="controls" id="streamControls" style="display: none;">
+            <button class="btn btn-danger" onclick="leaveStream()">🚪 Leave Stream</button>
+            <button class="btn btn-warning" onclick="toggleFullscreen()">🔍 Fullscreen</button>
+            <button class="btn btn-warning" onclick="toggleMute()">🔊 Mute</button>
+        </div>
+
+        <div class="volume-control" id="volumeControls" style="display: none;">
+            <span>🔊 Volume:</span>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50" onchange="adjustVolume()">
+            <span id="volumeValue">50%</span>
+        </div>
+
+        <div class="quality-selector" id="qualityControls" style="display: none;">
+            <span>Quality:</span>
+            <button class="quality-btn active" onclick="setQuality('auto')">Auto</button>
+            <button class="quality-btn" onclick="setQuality('720p')">720p</button>
+            <button class="quality-btn" onclick="setQuality('480p')">480p</button>
+            <button class="quality-btn" onclick="setQuality('360p')">360p</button>
+        </div>
+
+        <div class="status" id="status">
+            Enter room code and click "Join Stream" to start watching
+        </div>
+
+        <div class="video-container" id="videoContainer">
+            <div class="waiting-screen" id="waitingScreen">
+                <div class="icon">📺</div>
+                <div>Waiting for stream...</div>
+                <div style="font-size: 14px; margin-top: 10px; opacity: 0.7;">
+                    Join a room to start watching
+                </div>
+            </div>
+            <video id="streamVideo" autoplay style="display: none;"></video>
+            <div class="stream-overlay" id="streamOverlay" style="display: none;">
+                <div class="live-indicator"></div>
+                <span>LIVE</span>
+            </div>
+        </div>
+
+        <div class="viewer-stats" id="viewerStats" style="display: none;">
+            <div class="stat-item">
+                <div class="stat-value" id="connectionQuality">Good</div>
+                <div>Connection</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="latency">~100ms</div>
+                <div>Latency</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="fps">30 FPS</div>
+                <div>Frame Rate</div>
+            </div>
+        </div>
+
+        <div class="chat-panel" id="chatPanel" style="display: none;">
+            <h4>💬 Chat (Coming Soon)</h4>
+            <div id="chatMessages">
+                <div class="chat-message">System: Chat feature will be available in next update</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class StreamViewer {
+            constructor() {
+                this.socket = null;
+                this.peerConnection = null;
+                this.roomId = null;
+                this.isConnected = false;
+                this.currentQuality = 'auto';
+                this.volume = 0.5;
+                this.isMuted = false;
+
+                this.rtcConfig = {
+                    iceServers: [
+                        { urls: 'stun:stun.l.google.com:19302' },
+                        { urls: 'stun:stun1.l.google.com:19302' }
+                    ]
+                };
+
+                this.parseUrlParams();
+            }
+
+            parseUrlParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const roomFromUrl = urlParams.get('room');
+                if (roomFromUrl) {
+                    document.getElementById('roomInput').value = roomFromUrl;
+                }
+            }
+
+            updateStatus(message) {
+                document.getElementById('status').textContent = message;
+                console.log('Viewer:', message);
+            }
+
+            async joinStream() {
+                const roomName = document.getElementById('roomInput').value.trim();
+                const viewerName = document.getElementById('nameInput').value.trim();
+
+                if (!roomName) {
+                    this.updateStatus('❌ Please enter a room code');
+                    return;
+                }
+
+                try {
+                    this.updateStatus('🔗 Connecting to stream...');
+                    
+                    // Connect to server
+                    this.socket = io();
+                    this.setupSocketHandlers();
+
+                    this.roomId = roomName;
+                    
+                    // Join as viewer
+                    this.socket.emit('join-room', {
+                        roomId: this.roomId,
+                        userId: 'viewer-' + Date.now(),
+                        userName: viewerName || 'Anonymous',
+                        role: 'viewer'
+                    });
+
+                } catch (error) {
+                    this.updateStatus('❌ Failed to join stream: ' + error.message);
+                }
+            }
+
+            setupSocketHandlers() {
+                this.socket.on('joined-room', (data) => {
+                    this.isConnected = true;
+                    this.updateStatus('✅ Connected! Waiting for host stream...');
+                    this.updateUI(true);
+                    this.requestStream();
+                });
+
+                this.socket.on('host-joined', (data) => {
+                    this.updateStatus('🎮 Host is online! Setting up stream...');
+                    document.getElementById('hostName').textContent = data.userName;
+                });
+
+                this.socket.on('viewer-joined', (data) => {
+                    // Update viewer count when other viewers join
+                    this.updateViewerCount();
+                });
+
+                this.socket.on('host-left', () => {
+                    this.updateStatus('📴 Host has left. Stream ended.');
+                    this.handleStreamEnd();
+                });
+
+                // WebRTC signaling
+                this.socket.on('offer', async (data) => {
+                    if (data.sender === 'host') {
+                        await this.handleOffer(data);
+                    }
+                });
+
+                this.socket.on('ice-candidate', async (data) => {
+                    if (data.sender === 'host') {
+                        await this.handleIceCandidate(data);
+                    }
+                });
+
+                this.socket.on('error', (error) => {
+                    this.updateStatus('❌ Connection error: ' + error.message);
+                });
+            }
+
+            requestStream() {
+                if (this.socket) {
+                    this.socket.emit('viewer-request-stream', {
+                        viewerId: this.socket.id
+                    });
+                }
+            }
+
+            async handleOffer(data) {
+                console.log('📡 Received offer from host, setting up peer connection...');
+                this.peerConnection = new RTCPeerConnection(this.rtcConfig);
+
+                // Handle remote stream
+                this.peerConnection.ontrack = (event) => {
+                    console.log('🎥 Received remote stream!', event.streams);
+                    const remoteStream = event.streams[0];
+                    console.log('🎥 Stream tracks:', remoteStream.getTracks());
+                    
+                    const video = document.getElementById('streamVideo');
+                    video.srcObject = remoteStream;
+                    video.style.display = 'block';
+                    video.volume = this.volume;
+                    
+                    // Force video to play
+                    video.play().then(() => {
+                        console.log('✅ Video started playing');
+                    }).catch(err => {
+                        console.error('❌ Video play failed:', err);
+                    });
+                    
+                    document.getElementById('waitingScreen').style.display = 'none';
+                    document.getElementById('streamOverlay').style.display = 'block';
+                    
+                    this.updateStatus('🎉 Stream started! Enjoy watching!');
+                    document.getElementById('streamStatus').textContent = 'LIVE';
+                    document.getElementById('streamStatus').style.color = '#4CAF50';
+                };
+
+                // Additional connection event handlers
+                this.peerConnection.onconnectionstatechange = () => {
+                    console.log('📊 Connection state:', this.peerConnection.connectionState);
+                    this.updateStatus(`Connection: ${this.peerConnection.connectionState}`);
+                };
+
+                this.peerConnection.oniceconnectionstatechange = () => {
+                    console.log('🧊 ICE connection state:', this.peerConnection.iceConnectionState);
+                };
+
+                // Handle ICE candidates
+                this.peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        console.log('🧊 Sending ICE candidate to host');
+                        this.socket.emit('ice-candidate', {
+                            target: data.hostSocketId || 'host',
+                            candidate: event.candidate,
+                            sender: this.socket.id
+                        });
+                    }
+                };
+
+                // Connection state monitoring was moved above to avoid duplication
+
+                console.log('📡 Setting remote description and creating answer...');
+                await this.peerConnection.setRemoteDescription(data.offer);
+                const answer = await this.peerConnection.createAnswer();
+                await this.peerConnection.setLocalDescription(answer);
+
+                console.log('📡 Sending answer to host');
+                this.socket.emit('answer', {
+                    target: data.hostSocketId || 'host',
+                    answer: answer,
+                    sender: this.socket.id
+                });
+            }
+
+            async handleIceCandidate(data) {
+                if (this.peerConnection) {
+                    await this.peerConnection.addIceCandidate(data.candidate);
+                }
+            }
+
+            handleStreamEnd() {
+                const video = document.getElementById('streamVideo');
+                video.style.display = 'none';
+                document.getElementById('waitingScreen').style.display = 'flex';
+                document.getElementById('streamOverlay').style.display = 'none';
+                document.getElementById('streamStatus').textContent = 'Offline';
+                document.getElementById('streamStatus').style.color = '#e74c3c';
+            }
+
+            leaveStream() {
+                if (this.socket) {
+                    this.socket.emit('leave-room');
+                    this.socket.disconnect();
+                }
+
+                if (this.peerConnection) {
+                    this.peerConnection.close();
+                    this.peerConnection = null;
+                }
+
+                this.isConnected = false;
+                this.updateUI(false);
+                this.updateStatus('👋 Left the stream');
+                this.handleStreamEnd();
+            }
+
+            toggleFullscreen() {
+                const video = document.getElementById('streamVideo');
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    video.requestFullscreen();
+                }
+            }
+
+            toggleMute() {
+                const video = document.getElementById('streamVideo');
+                this.isMuted = !this.isMuted;
+                video.muted = this.isMuted;
+                
+                const btn = event.target;
+                btn.textContent = this.isMuted ? '🔇 Unmute' : '🔊 Mute';
+            }
+
+            adjustVolume() {
+                const slider = document.getElementById('volumeSlider');
+                this.volume = slider.value / 100;
+                const video = document.getElementById('streamVideo');
+                video.volume = this.volume;
+                document.getElementById('volumeValue').textContent = slider.value + '%';
+            }
+
+            setQuality(quality) {
+                this.currentQuality = quality;
+                document.getElementById('streamQuality').textContent = quality;
+                
+                // Update active button
+                document.querySelectorAll('.quality-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                // In a real implementation, you'd send quality preference to host
+                console.log('Quality set to:', quality);
+            }
+
+            updateConnectionQuality() {
+                if (this.peerConnection) {
+                    this.peerConnection.getStats().then(stats => {
+                        stats.forEach(report => {
+                            if (report.type === 'inbound-rtp' && report.mediaType === 'video') {
+                                // Update stats display
+                                const fps = report.framesPerSecond || 30;
+                                document.getElementById('fps').textContent = fps + ' FPS';
+                            }
+                        });
+                    });
+                }
+                
+                // Simulate connection quality (in real app, calculate from stats)
+                const qualities = ['Excellent', 'Good', 'Fair', 'Poor'];
+                const quality = qualities[Math.floor(Math.random() * qualities.length)];
+                document.getElementById('connectionQuality').textContent = quality;
+            }
+
+            updateViewerCount() {
+                // In real implementation, get from server
+                const count = Math.floor(Math.random() * 50) + 1;
+                document.getElementById('viewerCount').textContent = count;
+            }
+
+            updateUI(connected) {
+                document.getElementById('preJoinControls').style.display = connected ? 'none' : 'flex';
+                document.getElementById('streamControls').style.display = connected ? 'flex' : 'none';
+                document.getElementById('volumeControls').style.display = connected ? 'flex' : 'none';
+                document.getElementById('qualityControls').style.display = connected ? 'flex' : 'none';
+                document.getElementById('viewerStats').style.display = connected ? 'flex' : 'none';
+                document.getElementById('chatPanel').style.display = connected ? 'block' : 'none';
+                document.getElementById('joinSection').style.display = connected ? 'none' : 'block';
+            }
+        }
+
+        // Global functions
+        let streamViewer = new StreamViewer();
+
+        function joinStream() {
+            streamViewer.joinStream();
+        }
+
+        function leaveStream() {
+            streamViewer.leaveStream();
+        }
+
+        function toggleFullscreen() {
+            streamViewer.toggleFullscreen();
+        }
+
+        function toggleMute() {
+            streamViewer.toggleMute();
+        }
+
+        function adjustVolume() {
+            streamViewer.adjustVolume();
+        }
+
+        function setQuality(quality) {
+            streamViewer.setQuality(quality);
+        }
+
+        // Auto-connect if room parameter is provided
+        window.onload = function() {
+            const roomInput = document.getElementById('roomInput');
+            if (roomInput.value) {
+                document.getElementById('status').textContent = 'Room code detected. Click "Join Stream" to start watching!';
+            }
+        };
+    </script>
+</body>
+</html> 

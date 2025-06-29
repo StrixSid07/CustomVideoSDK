@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 SDK Debug Tool</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        .test-section.error {
+            border-left-color: #f44336;
+        }
+        .test-section.warning {
+            border-left-color: #ff9800;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        video {
+            width: 300px;
+            height: 200px;
+            background: #000;
+            border-radius: 8px;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Custom Video SDK - Debug Tool</h1>
+    
+    <div class="info">
+        <h3>📋 Diagnostic Steps:</h3>
+        <p>This tool will help identify why "Join Room" isn't working. Run each test below:</p>
+    </div>
+
+    <div class="test-section">
+        <h3>1️⃣ Browser Compatibility Test</h3>
+        <button onclick="testBrowserSupport()">Test Browser Support</button>
+        <div id="browserResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2️⃣ Server Connection Test</h3>
+        <button onclick="testServerConnection()">Test Server Connection</button>
+        <div id="serverResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3️⃣ WebSocket Connection Test</h3>
+        <button onclick="testWebSocketConnection()">Test WebSocket</button>
+        <div id="websocketResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4️⃣ Camera & Microphone Test</h3>
+        <button onclick="testCamera()">Test Camera Access</button>
+        <div id="cameraResult" class="result"></div>
+        <video id="testVideo" autoplay muted style="display: none;"></video>
+    </div>
+
+    <div class="test-section">
+        <h3>5️⃣ Full Demo Test</h3>
+        <button onclick="testFullDemo()">Test Complete Flow</button>
+        <div id="demoResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🔍 Console Logs</h3>
+        <div id="logs" class="result" style="max-height: 200px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logsDiv = document.getElementById('logs');
+
+        function addLog(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span class="${type}">[${timestamp}] ${message}</span>`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog(args.join(' '), 'success');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog(args.join(' '), 'error');
+        };
+
+        // Test Functions
+        function testBrowserSupport() {
+            const result = document.getElementById('browserResult');
+            const tests = [];
+
+            // Check WebRTC support
+            if (typeof RTCPeerConnection !== 'undefined') {
+                tests.push('✅ WebRTC supported');
+            } else {
+                tests.push('❌ WebRTC NOT supported');
+            }
+
+            // Check getUserMedia support
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                tests.push('✅ getUserMedia supported');
+            } else {
+                tests.push('❌ getUserMedia NOT supported');
+            }
+
+            // Check WebSocket support
+            if (typeof WebSocket !== 'undefined') {
+                tests.push('✅ WebSocket supported');
+            } else {
+                tests.push('❌ WebSocket NOT supported');
+            }
+
+            // Check if HTTPS or localhost
+            if (location.protocol === 'https:' || location.hostname === 'localhost') {
+                tests.push('✅ Secure context (HTTPS/localhost)');
+            } else {
+                tests.push('⚠️ Insecure context (may cause camera issues)');
+            }
+
+            result.innerHTML = tests.join('<br>');
+            console.log('Browser support test completed');
+        }
+
+        async function testServerConnection() {
+            const result = document.getElementById('serverResult');
+            result.innerHTML = 'Testing server connection...';
+
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `✅ Server connected successfully<br>Status: ${data.status}<br>Uptime: ${Math.round(data.uptime)}s`;
+                    result.className = 'result success';
+                } else {
+                    result.innerHTML = `❌ Server error: ${response.status}`;
+                    result.className = 'result error';
+                }
+            } catch (error) {
+                result.innerHTML = `❌ Server connection failed: ${error.message}`;
+                result.className = 'result error';
+            }
+        }
+
+        function testWebSocketConnection() {
+            const result = document.getElementById('websocketResult');
+            result.innerHTML = 'Testing WebSocket connection...';
+
+            try {
+                const socket = io();
+                
+                socket.on('connect', () => {
+                    result.innerHTML = `✅ WebSocket connected successfully<br>Socket ID: ${socket.id}`;
+                    result.className = 'result success';
+                    socket.disconnect();
+                });
+
+                socket.on('connect_error', (error) => {
+                    result.innerHTML = `❌ WebSocket connection failed: ${error.message}`;
+                    result.className = 'result error';
+                });
+
+                // Timeout after 5 seconds
+                setTimeout(() => {
+                    if (!socket.connected) {
+                        result.innerHTML = `❌ WebSocket connection timeout`;
+                        result.className = 'result error';
+                        socket.disconnect();
+                    }
+                }, 5000);
+
+            } catch (error) {
+                result.innerHTML = `❌ WebSocket test failed: ${error.message}`;
+                result.className = 'result error';
+            }
+        }
+
+        async function testCamera() {
+            const result = document.getElementById('cameraResult');
+            const video = document.getElementById('testVideo');
+            
+            result.innerHTML = 'Testing camera access...';
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+
+                video.srcObject = stream;
+                video.style.display = 'block';
+                
+                result.innerHTML = `✅ Camera and microphone access granted<br>Video tracks: ${stream.getVideoTracks().length}<br>Audio tracks: ${stream.getAudioTracks().length}`;
+                result.className = 'result success';
+
+                // Stop the stream after 3 seconds
+                setTimeout(() => {
+                    stream.getTracks().forEach(track => track.stop());
+                    video.style.display = 'none';
+                }, 3000);
+
+            } catch (error) {
+                result.innerHTML = `❌ Camera access failed: ${error.message}<br><br>💡 Try:<br>• Allow camera permission<br>• Refresh the page<br>• Check if camera is used by another app`;
+                result.className = 'result error';
+            }
+        }
+
+        async function testFullDemo() {
+            const result = document.getElementById('demoResult');
+            result.innerHTML = 'Testing complete demo flow...';
+
+            try {
+                // Step 1: Get media
+                console.log('Step 1: Getting user media...');
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 640, height: 480 },
+                    audio: true
+                });
+
+                // Step 2: Connect to server
+                console.log('Step 2: Connecting to server...');
+                const socket = io();
+
+                socket.on('connect', () => {
+                    console.log('Step 3: Connected to server, joining room...');
+                    
+                    // Step 3: Join room
+                    socket.emit('join-room', {
+                        roomId: 'debug-test-room',
+                        userId: 'debug-user-' + Date.now(),
+                        userName: 'Debug User'
+                    });
+                });
+
+                socket.on('joined-room', (data) => {
+                    console.log('Step 4: Successfully joined room:', data);
+                    result.innerHTML = `✅ Complete demo flow successful!<br>Room ID: ${data.roomId}<br>User ID: ${data.userId}`;
+                    result.className = 'result success';
+                    
+                    // Clean up
+                    stream.getTracks().forEach(track => track.stop());
+                    socket.disconnect();
+                });
+
+                socket.on('error', (error) => {
+                    result.innerHTML = `❌ Room join error: ${error.message}`;
+                    result.className = 'result error';
+                    stream.getTracks().forEach(track => track.stop());
+                    socket.disconnect();
+                });
+
+                // Timeout
+                setTimeout(() => {
+                    if (result.className !== 'result success') {
+                        result.innerHTML = `❌ Demo test timeout - check server logs`;
+                        result.className = 'result error';
+                        stream.getTracks().forEach(track => track.stop());
+                        socket.disconnect();
+                    }
+                }, 10000);
+
+            } catch (error) {
+                result.innerHTML = `❌ Demo test failed: ${error.message}`;
+                result.className = 'result error';
+                console.error('Demo test error:', error);
+            }
+        }
+
+        // Auto-run browser support test on load
+        window.onload = function() {
+            testBrowserSupport();
+            addLog('Debug tool loaded', 'success');
+        };
+    </script>
+</body>
+</html> 
