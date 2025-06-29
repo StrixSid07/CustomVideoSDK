@@ -6,7 +6,7 @@
 
 A powerful, self-hosted video calling SDK built with Node.js and WebRTC that replicates Agora's functionality. Perfect for mobile gaming applications requiring real-time video communication.
 
-**🌐 Live Demo:** [videosdk.genisisserver.com](https://videosdk.genisisserver.com)  
+**🌐 Live Demo:** [videosdk.genisisserver.space](https://videosdk.genisisserver.space)  
 **📁 Source Code:** [github.com/StrixSid07/CustomVideoSDK](https://github.com/StrixSid07/CustomVideoSDK)
 
 ## 🚀 Features
@@ -138,7 +138,7 @@ sudo nano /etc/nginx/sites-available/videosdk
 ```nginx
 server {
     listen 80;
-    server_name videosdk.genisisserver.com www.videosdk.genisisserver.com;
+    server_name videosdk.genisisserver.space www.videosdk.genisisserver.space;
     
     # Redirect HTTP to HTTPS
     return 301 https://$server_name$request_uri;
@@ -146,11 +146,11 @@ server {
 
 server {
     listen 443 ssl http2;
-    server_name videosdk.genisisserver.com www.videosdk.genisisserver.com;
+    server_name videosdk.genisisserver.space www.videosdk.genisisserver.space;
     
     # SSL Configuration (will be added by Certbot)
-    # ssl_certificate /etc/letsencrypt/live/videosdk.genisisserver.com/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/videosdk.genisisserver.com/privkey.pem;
+    # ssl_certificate /etc/letsencrypt/live/videosdk.genisisserver.space/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/videosdk.genisisserver.space/privkey.pem;
     
     # Security headers
     add_header X-Frame-Options "SAMEORIGIN" always;
@@ -213,7 +213,7 @@ sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 # Get SSL certificate for your domain
-sudo certbot --nginx -d videosdk.genisisserver.com -d www.videosdk.genisisserver.com --email support@genisisserver.com --agree-tos --no-eff-email
+sudo certbot --nginx -d videosdk.genisisserver.space -d www.videosdk.genisisserver.space --email support@genisisserver.space --agree-tos --no-eff-email
 
 # Verify SSL auto-renewal
 sudo certbot renew --dry-run
@@ -223,12 +223,12 @@ sudo systemctl restart nginx
 sudo systemctl restart pm2-root
 ```
 
-**For custom domain, replace `videosdk.genisisserver.com` with your domain:**
+**For custom domain, replace `videosdk.genisisserver.space` with your domain:**
 ```bash
 # Example for custom domain setup
 sudo nano /etc/nginx/sites-available/videosdk
-# Replace: videosdk.genisisserver.com with yourdomain.com
-# Replace: support@genisisserver.com with your-email@yourdomain.com
+# Replace: videosdk.genisisserver.space with yourdomain.com
+# Replace: support@genisisserver.space with your-email@yourdomain.com
 
 # Then run certbot with your domain:
 sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com --email your-email@yourdomain.com --agree-tos --no-eff-email
@@ -241,11 +241,11 @@ sudo systemctl status nginx
 sudo pm2 status
 
 # Test domain access
-curl -I https://videosdk.genisisserver.com
-curl -I https://videosdk.genisisserver.com/health
+curl -I https://videosdk.genisisserver.space
+curl -I https://videosdk.genisisserver.space/health
 
 # Test WebSocket connection
-curl -I https://videosdk.genisisserver.com/socket.io/
+curl -I https://videosdk.genisisserver.space/socket.io/
 
 # View application logs
 sudo pm2 logs video-sdk
@@ -256,10 +256,10 @@ sudo tail -f /var/log/nginx/error.log
 ```
 
 **🎉 Access Your Video SDK:**
-- **Host Dashboard:** `https://videosdk.genisisserver.com/host.html`
-- **Client Viewer:** `https://videosdk.genisisserver.com/client.html`
-- **Debug Tool:** `https://videosdk.genisisserver.com/debug.html`
-- **Health Check:** `https://videosdk.genisisserver.com/health`
+- **Host Dashboard:** `https://videosdk.genisisserver.space/host.html`
+- **Client Viewer:** `https://videosdk.genisisserver.space/client.html`
+- **Debug Tool:** `https://videosdk.genisisserver.space/debug.html`
+- **Health Check:** `https://videosdk.genisisserver.space/health`
 
 ## 📊 API Endpoints
 
@@ -461,8 +461,8 @@ sudo snap install core; sudo snap refresh core
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
-# Get certificate for videosdk.genisisserver.com
-sudo certbot --nginx -d videosdk.genisisserver.com -d www.videosdk.genisisserver.com --email support@genisisserver.com --agree-tos --no-eff-email
+# Get certificate for videosdk.genisisserver.space
+sudo certbot --nginx -d videosdk.genisisserver.space -d www.videosdk.genisisserver.space --email support@genisisserver.space --agree-tos --no-eff-email
 
 # Restart services
 sudo systemctl restart nginx
@@ -497,11 +497,11 @@ sudo ufw allow 5005/tcp
 ### **Health Check URLs**
 ```bash
 # Test these URLs after deployment:
-https://videosdk.genisisserver.com/health
-https://videosdk.genisisserver.com/api/info
-https://videosdk.genisisserver.com/host.html
-https://videosdk.genisisserver.com/client.html
-https://videosdk.genisisserver.com/debug.html
+https://videosdk.genisisserver.space/health
+https://videosdk.genisisserver.space/api/info
+https://videosdk.genisisserver.space/host.html
+https://videosdk.genisisserver.space/client.html
+https://videosdk.genisisserver.space/debug.html
 ```
 
 ---

@@ -15,8 +15,8 @@ NC='\033[0m' # No Color
 # Configuration
 APP_NAME="custom-video-sdk"
 APP_DIR="/var/www/$APP_NAME"
-DOMAIN="videosdk.genisisserver.com"  # Your production domain
-EMAIL="support@genisisserver.com"  # Your support email
+DOMAIN="videosdk.genisisserver.space"  # Your production domain
+EMAIL="support@genisisserver.space"  # Your support email
 
 echo -e "${BLUE}🚀 Starting Custom Video SDK Deployment${NC}"
 
@@ -100,8 +100,8 @@ module.exports = {
       PORT: 5005,
       MAX_PARTICIPANTS: 50,
       RECORDING_ENABLED: true,
-      CORS_ORIGIN: 'https://videosdk.genisisserver.com',
-      DOMAIN: 'videosdk.genisisserver.com'
+      CORS_ORIGIN: 'https://videosdk.genisisserver.space',
+      DOMAIN: 'videosdk.genisisserver.space'
     },
     error_file: './logs/err.log',
     out_file: './logs/out.log',
