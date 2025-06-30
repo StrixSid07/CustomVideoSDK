@@ -29,6 +29,7 @@ A powerful, self-hosted video calling SDK built with Node.js and WebRTC that rep
 
 ## ⚡ **Quick Start**
 
+### **Local Development**
 ```bash
 # Clone the repository
 git clone https://github.com/StrixSid07/CustomVideoSDK.git
@@ -37,11 +38,25 @@ cd CustomVideoSDK
 # Install dependencies
 npm install
 
-# Start the server
-npm start
+# Start development server
+npm run dev
+# OR
+node server/index.js
 
 # Access the dashboard
 # Open: http://localhost:5005/host.html
+```
+
+### **Test Before Deployment**
+```bash
+# Test all endpoints
+curl http://localhost:5005/health
+curl http://localhost:5005/api/info
+
+# Test in browser
+# - Host: http://localhost:5005/host.html
+# - Client: http://localhost:5005/client.html
+# - Debug: http://localhost:5005/debug.html
 ```
 
 ## 🛠️ Installation
@@ -93,39 +108,108 @@ sdk.EnableVideoObserver();
 await sdk.JoinChannelByKey('', 'channel_name', 0);
 ```
 
-## 🌐 Deployment on Hostinger VPS
+## 🚀 Automated Deployment with GitHub Actions
 
-### Step 1: Server Setup
+This project includes automated deployment to your VPS using GitHub Actions. Every push to the main branch automatically deploys to your server.
+
+📖 **[Complete Deployment Guide →](DEPLOYMENT.md)**
+
+### Step 1: SSH Key Setup
+
+**On your local machine:**
+```bash
+# Generate SSH key pair (if you don't have one)
+ssh-keygen -t rsa -b 4096 -C "github-actions@videosdk"
+
+# Copy public key to server
+ssh-copy-id root@77.37.44.161
+
+# Test SSH connection
+ssh root@77.37.44.161
+```
+
+**Alternative manual setup:**
+```bash
+# On your server
+mkdir -p ~/.ssh
+nano ~/.ssh/authorized_keys
+# Paste your public key here
+
+# Set permissions
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
+
+### Step 2: GitHub Secrets Setup
+
+Go to your GitHub repository → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+
+Add these secrets:
+
+| Secret Name | Value | Description |
+|-------------|-------|-------------|
+| `SERVER_HOST` | `77.37.44.161` | Your VPS IP address |
+| `SERVER_USER` | `root` | SSH username |
+| `SERVER_PORT` | `22` | SSH port |
+| `SERVER_SSH_KEY` | `[Private Key Content]` | Your private SSH key |
+
+**To get your private SSH key:**
+```bash
+# On your local machine
+cat ~/.ssh/id_rsa
+# Copy the entire content including -----BEGIN/END-----
+```
+
+### Step 3: Manual Server Setup (One-time)
 ```bash
 # Connect to your VPS
-ssh root@your-vps-ip
+ssh root@77.37.44.161
 
 # Update system
 apt update && apt upgrade -y
 
 # Install Node.js
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-apt-get install -y nodejs
+apt-get install -y nodejs git
 
-# Install PM2 for process management
+# Install PM2 globally
 npm install -g pm2
+
+# Create app directory
+mkdir -p /var/www/video-sdk
 ```
 
-### Step 2: Deploy Application
+### Step 4: Automated Deployment
+
+Once you've set up the secrets, **every push to main branch will automatically deploy**:
+
 ```bash
-# Clone the Custom Video SDK to VPS
-git clone https://github.com/StrixSid07/CustomVideoSDK.git /var/www/video-sdk
-cd /var/www/video-sdk
+# Make changes to your code
+git add .
+git commit -m "Update video SDK"
+git push origin main
 
-# Install dependencies
-npm install --production
-
-# Start with PM2
-pm2 start server/index.js --name "video-sdk"
-pm2 startup
-pm2 save
+# GitHub Actions will automatically:
+# 1. Connect to your server
+# 2. Pull latest code (with hard reset)
+# 3. Install dependencies
+# 4. Restart services
+# 5. Configure Nginx & SSL
+# 6. Run health checks
 ```
-### Step 3: Configure Nginx & SSL
+
+**Monitor deployment:**
+- Go to **GitHub** → **Actions** tab to see deployment progress
+- Check logs for any issues
+
+**Workflow Features:**
+- ✅ **Smart Updates:** Uses `git reset --hard` for clean updates
+- ✅ **Health Checks:** Automatic validation after deployment
+- ✅ **SSL Setup:** Automatic SSL certificate installation
+- ✅ **Zero Downtime:** PM2 reload for seamless updates
+- ✅ **Error Handling:** Comprehensive error reporting
+
+### Step 5: Manual Nginx & SSL Setup (If needed)
 ```bash
 # Install Nginx
 apt install nginx -y
@@ -234,7 +318,7 @@ sudo nano /etc/nginx/sites-available/videosdk
 sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com --email your-email@yourdomain.com --agree-tos --no-eff-email
 ```
 
-### Step 4: Validate Deployment
+### Step 6: Validate Deployment
 ```bash
 # Check if all services are running
 sudo systemctl status nginx
