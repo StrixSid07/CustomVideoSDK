@@ -35,7 +35,7 @@ jobs:
           echo -e "${YELLOW}🌐 Server: ${{ secrets.SERVER_HOST }}${NC}"
           
           # Configuration
-          APP_NAME="custom-video-sdk"
+          APP_NAME="video-sdk"
           APP_DIR="/var/www/video-sdk"
           DOMAIN="videosdk.genisisserver.space"
           EMAIL="support@genisisserver.space"
@@ -70,10 +70,10 @@ jobs:
           cat > ecosystem.config.js << 'EOF'
           module.exports = {
             apps: [{
-              name: 'custom-video-sdk',
+              name: 'video-sdk',
               script: 'server/index.js',
-              instances: 'max',
-              exec_mode: 'cluster',
+              instances: 1,
+              exec_mode: 'fork',
               env: {
                 NODE_ENV: 'production',
                 PORT: 5005,
@@ -112,7 +112,7 @@ jobs:
             cat > /etc/nginx/sites-available/videosdk << 'NGINXEOF'
           server {
               listen 80;
-              server_name videosdk.genisisserver.space www.videosdk.genisisserver.space;
+              server_name videosdk.genisisserver.space;
               
               location / {
                   proxy_pass http://localhost:5005;
@@ -157,12 +157,21 @@ jobs:
           # Restart/Start application with PM2
           echo -e "${YELLOW}🔄 Restarting application...${NC}"
           
-          # Check if app is already running
-          if pm2 list | grep -q "custom-video-sdk"; then
-            echo -e "${YELLOW}🔄 Reloading existing application...${NC}"
-            pm2 reload custom-video-sdk
+          # Clean up any errored custom-video-sdk processes
+          if pm2 list | grep -q "custom-video-sdk.*errored"; then
+            echo -e "${YELLOW}🧹 Cleaning up errored processes...${NC}"
+            pm2 delete custom-video-sdk 2>/dev/null || true
+          fi
+          
+          # Check if video-sdk app is already running
+          if pm2 list | grep -q "video-sdk.*online"; then
+            echo -e "${YELLOW}🔄 Reloading existing video-sdk application...${NC}"
+            pm2 reload video-sdk
+          elif pm2 list | grep -q "video-sdk"; then
+            echo -e "${YELLOW}🔄 Restarting video-sdk application...${NC}"
+            pm2 restart video-sdk
           else
-            echo -e "${YELLOW}🚀 Starting new application...${NC}"
+            echo -e "${YELLOW}🚀 Starting new video-sdk application...${NC}"
             pm2 start ecosystem.config.js
             pm2 startup
             pm2 save
@@ -177,7 +186,7 @@ jobs:
           else
             echo -e "${RED}❌ Application health check failed${NC}"
             echo -e "${YELLOW}📜 Recent logs:${NC}"
-            pm2 logs custom-video-sdk --lines 10 --nostream
+            pm2 logs video-sdk --lines 10 --nostream
           fi
           
           # Setup SSL if not already configured
