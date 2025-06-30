@@ -161,7 +161,9 @@
             </div>
             
             <h4>📋 Share this link with your viewers:</h4>
-            <div class="share-link" id="shareLink">http://localhost:5005/client.html?room=<span id="roomCode">not-started</span></div>
+            <div class="share-link" id="shareLink">
+                <span id="shareLinkText">https://videosdk.genisisserver.space/client.html?room=</span><span id="roomCode">not-started</span>
+            </div>
             <button class="btn btn-info" onclick="copyShareLink()">📋 Copy Link</button>
         </div>
 
@@ -510,7 +512,12 @@
 
             updateShareLink() {
                 if (this.roomId) {
-                    const link = `http://localhost:5005/client.html?room=${this.roomId}`;
+                    // Auto-detect domain - use current domain or fallback to production
+                    const currentDomain = window.location.origin;
+                    const isLocalhost = currentDomain.includes('localhost') || currentDomain.includes('127.0.0.1');
+                    const domain = isLocalhost ? 'https://videosdk.genisisserver.space' : currentDomain;
+                    
+                    const link = `${domain}/client.html?room=${this.roomId}`;
                     document.getElementById('shareLink').innerHTML = link;
                     document.getElementById('roomCode').textContent = this.roomId;
                 }
@@ -546,6 +553,15 @@
 
         // Global functions
         let hostStreamer = new HostStreamer();
+
+        // Initialize domain on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentDomain = window.location.origin;
+            const isLocalhost = currentDomain.includes('localhost') || currentDomain.includes('127.0.0.1');
+            const domain = isLocalhost ? 'https://videosdk.genisisserver.space' : currentDomain;
+            
+            document.getElementById('shareLinkText').textContent = `${domain}/client.html?room=`;
+        });
 
         function startStream() {
             hostStreamer.startStream();
