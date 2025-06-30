@@ -372,6 +372,9 @@ The SDK automatically adjusts quality based on:
 ## 📱 Mobile Gaming Integration
 
 ### Unity Integration
+
+📖 **[Complete Unity Developer Guide →](https://videosdk.genisisserver.space/unity-docs)**
+
 ```csharp
 // Similar to original Agora usage
 public class CustomVideoManager {
@@ -522,6 +525,8 @@ MIT License - Use freely in commercial projects
 - **Releases:** [https://github.com/StrixSid07/CustomVideoSDK/releases](https://github.com/StrixSid07/CustomVideoSDK/releases)
 
 ### **Documentation Links**
+- **🎮 Unity Developer Guide:** [https://videosdk.genisisserver.space/unity-docs](https://videosdk.genisisserver.space/unity-docs)
+- **📚 Complete Unity Integration:** [https://videosdk.genisisserver.space/docs](https://videosdk.genisisserver.space/docs)
 
 ## 📋 **Quick Command Reference**
 

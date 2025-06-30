@@ -85,6 +85,16 @@ class CustomVideoSDKServer {
             const roomId = this.roomManager.createRoom(roomName, maxParticipants);
             res.json({ roomId, roomName, maxParticipants });
         });
+
+        // Unity documentation page
+        this.app.get('/unity-docs', (req, res) => {
+            res.sendFile('unity-docs.html', { root: 'public' });
+        });
+
+        // Alternative route for docs
+        this.app.get('/docs', (req, res) => {
+            res.sendFile('unity-docs.html', { root: 'public' });
+        });
     }
 
     setupSocketHandlers() {
