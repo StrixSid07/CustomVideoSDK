@@ -4,92 +4,226 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎮 Custom Video SDK for Unity - Developer Documentation</title>
+    
+    <!-- Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for better typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
+                    },
                     colors: {
-                        primary: '#667eea',
-                        secondary: '#764ba2',
-                        accent: '#f093fb'
+                        primary: {
+                            50: '#f0f4ff',
+                            100: '#e0eaff',
+                            500: '#667eea',
+                            600: '#5a6fd8',
+                            700: '#4c5bc7',
+                            900: '#2d3682'
+                        },
+                        secondary: {
+                            500: '#764ba2',
+                            600: '#6b4190',
+                            700: '#5d377e'
+                        }
                     }
                 }
             }
         }
     </script>
+    
     <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+        
         .code-block {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            border-radius: 8px;
-            padding: 16px;
+            background: #0d1117;
+            color: #e6edf3;
+            border-radius: 12px;
+            padding: 24px;
             overflow-x: auto;
-            font-family: 'Courier New', monospace;
-            border-left: 4px solid #667eea;
+            font-family: 'JetBrains Mono', Monaco, Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
-        .highlight { background: #fbbf24; color: #000; padding: 2px 4px; border-radius: 4px; }
+        
+        .code-block::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .code-block::-webkit-scrollbar-track {
+            background: #21262d;
+            border-radius: 4px;
+        }
+        
+        .code-block::-webkit-scrollbar-thumb {
+            background: #484f58;
+            border-radius: 4px;
+        }
+        
+        .code-block::-webkit-scrollbar-thumb:hover {
+            background: #656c76;
+        }
+        
+        .highlight { 
+            background: #fbbf24; 
+            color: #000; 
+            padding: 3px 6px; 
+            border-radius: 6px; 
+            font-weight: 600;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link {
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+        
+        .nav-link:hover {
+            background: #f3f4f6;
+            transform: translateY(-1px);
+        }
+        
+        .test-button {
+            transition: all 0.2s ease;
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        @media (max-width: 768px) {
+            .code-block {
+                padding: 16px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 font-sans">
     <!-- Header -->
-    <div class="gradient-bg text-white py-16">
+    <div class="gradient-bg text-white py-20">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4">🎮 Custom Video SDK</h1>
-            <p class="text-xl md:text-2xl mb-6">Unity Integration Guide</p>
-            <p class="text-lg opacity-90 max-w-3xl mx-auto">
-                Self-hosted, powerful video calling SDK built for Unity developers. 
-                Drop-in replacement for Agora with full source code control.
-            </p>
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">🎮 Custom Video SDK</h1>
+                <p class="text-2xl md:text-3xl mb-8 font-medium">Unity Integration Guide</p>
+                <p class="text-lg md:text-xl opacity-90 leading-relaxed">
+                    Self-hosted, powerful video calling SDK built for Unity developers.<br>
+                    Drop-in replacement for Agora with full source code control.
+                </p>
+                <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#overview" class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        📋 Get Started
+                    </a>
+                    <a href="#testing" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
+                        🧪 Test Endpoints
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-200">
         <div class="container mx-auto px-6">
-            <div class="flex justify-center space-x-8 py-4 overflow-x-auto">
-                <a href="#overview" class="text-primary hover:text-secondary font-medium whitespace-nowrap">Overview</a>
-                <a href="#techstack" class="text-primary hover:text-secondary font-medium whitespace-nowrap">Tech Stack</a>
-                <a href="#installation" class="text-primary hover:text-secondary font-medium whitespace-nowrap">Installation</a>
-                <a href="#integration" class="text-primary hover:text-secondary font-medium whitespace-nowrap">Unity Integration</a>
-                <a href="#configuration" class="text-primary hover:text-secondary font-medium whitespace-nowrap">Configuration</a>
-                <a href="#api" class="text-primary hover:text-secondary font-medium whitespace-nowrap">API Reference</a>
-                <a href="#testing" class="text-primary hover:text-secondary font-medium whitespace-nowrap">Testing</a>
+            <div class="flex justify-center space-x-2 md:space-x-6 py-4 overflow-x-auto">
+                <a href="#overview" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Overview</a>
+                <a href="#techstack" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Tech Stack</a>
+                <a href="#integration" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Unity Integration</a>
+                <a href="#configuration" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Configuration</a>
+                <a href="#testing" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Testing</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-6 py-12">
+    <div class="container mx-auto px-6 py-16">
         <!-- Overview Section -->
-        <section id="overview" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">📋 Overview</h2>
+        <section id="overview" class="mb-20">
+            <h2 class="text-4xl font-bold mb-12 text-center section-title">📋 Overview</h2>
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4 text-primary">🚀 Why Custom Video SDK?</h3>
-                    <ul class="space-y-2">
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> <span class="highlight">100% Agora-compatible API</span></li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> Self-hosted solution</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> Full source code control</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> 90% cost reduction</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> No usage limits</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> Mobile game optimized</li>
+                <div class="card p-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">🚀 Why Custom Video SDK?</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center text-lg">
+                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            <span class="highlight">100% Agora-compatible API</span>
+                        </li>
+                        <li class="flex items-center text-lg">
+                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            Self-hosted solution
+                        </li>
+                        <li class="flex items-center text-lg">
+                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            Full source code control
+                        </li>
+                        <li class="flex items-center text-lg">
+                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            90% cost reduction
+                        </li>
+                        <li class="flex items-center text-lg">
+                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            No usage limits
+                        </li>
+                        <li class="flex items-center text-lg">
+                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            Mobile game optimized
+                        </li>
                     </ul>
                 </div>
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4 text-primary">💰 Cost Comparison</h3>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center p-3 bg-red-50 rounded">
-                            <span class="font-medium">Agora SDK</span>
-                            <span class="text-red-600 font-bold">$200+ /month</span>
+                <div class="card p-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">💰 Cost Comparison</h3>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center p-4 bg-red-50 rounded-lg border border-red-200">
+                            <span class="font-semibold text-lg">Agora SDK</span>
+                            <span class="text-red-600 font-bold text-xl">$200+ /month</span>
                         </div>
-                        <div class="flex justify-between items-center p-3 bg-green-50 rounded">
-                            <span class="font-medium">Custom SDK</span>
-                            <span class="text-green-600 font-bold">$5-20 /month</span>
+                        <div class="flex justify-between items-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <span class="font-semibold text-lg">Custom SDK</span>
+                            <span class="text-green-600 font-bold text-xl">$5-20 /month</span>
                         </div>
-                        <div class="text-center text-sm text-gray-600">
+                        <div class="text-center text-gray-600 font-medium">
                             * Based on VPS hosting costs
                         </div>
                     </div>
@@ -98,100 +232,98 @@
         </section>
 
         <!-- Tech Stack Section -->
-        <section id="techstack" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">🛠️ Technology Stack</h2>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-4 text-primary">Backend</h3>
-                    <ul class="space-y-2 text-left">
-                        <li><strong>Node.js</strong> - Server runtime</li>
-                        <li><strong>Express.js</strong> - Web framework</li>
-                        <li><strong>Socket.IO</strong> - Real-time communication</li>
-                        <li><strong>WebRTC</strong> - Video/audio streaming</li>
-                        <li><strong>PM2</strong> - Process management</li>
+        <section id="techstack" class="mb-20">
+            <h2 class="text-4xl font-bold mb-12 text-center section-title">🛠️ Technology Stack</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card p-8 text-center">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">Backend</h3>
+                    <ul class="space-y-3 text-left">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                            <strong>Node.js</strong> - Server runtime
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                            <strong>Express.js</strong> - Web framework
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                            <strong>Socket.IO</strong> - Real-time communication
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                            <strong>WebRTC</strong> - Video/audio streaming
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                            <strong>PM2</strong> - Process management
+                        </li>
                     </ul>
                 </div>
-                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-4 text-primary">Infrastructure</h3>
-                    <ul class="space-y-2 text-left">
-                        <li><strong>Nginx</strong> - Reverse proxy</li>
-                        <li><strong>SSL/TLS</strong> - Security</li>
-                        <li><strong>VPS Hosting</strong> - Self-hosted</li>
-                        <li><strong>Auto-scaling</strong> - PM2 clusters</li>
-                        <li><strong>Load balancing</strong> - Built-in</li>
+                <div class="card p-8 text-center">
+                    <div class="text-4xl mb-4">🏗️</div>
+                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">Infrastructure</h3>
+                    <ul class="space-y-3 text-left">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                            <strong>Nginx</strong> - Reverse proxy
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                            <strong>SSL/TLS</strong> - Security
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                            <strong>VPS Hosting</strong> - Self-hosted
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                            <strong>Auto-scaling</strong> - PM2 clusters
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                            <strong>Load balancing</strong> - Built-in
+                        </li>
                     </ul>
                 </div>
-                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-                    <h3 class="text-xl font-semibold mb-4 text-primary">Unity Client</h3>
-                    <ul class="space-y-2 text-left">
-                        <li><strong>C# SDK</strong> - Native integration</li>
-                        <li><strong>WebRTC Unity</strong> - Video handling</li>
-                        <li><strong>JSON API</strong> - Data exchange</li>
-                        <li><strong>Event-driven</strong> - Callbacks</li>
-                        <li><strong>Cross-platform</strong> - All devices</li>
+                <div class="card p-8 text-center">
+                    <div class="text-4xl mb-4">🎮</div>
+                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">Unity Client</h3>
+                    <ul class="space-y-3 text-left">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                            <strong>C# SDK</strong> - Native integration
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                            <strong>WebRTC Unity</strong> - Video handling
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                            <strong>JSON API</strong> - Data exchange
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                            <strong>Event-driven</strong> - Callbacks
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                            <strong>Cross-platform</strong> - All devices
+                        </li>
                     </ul>
                 </div>
-            </div>
-        </section>
-
-        <!-- Installation Section -->
-        <section id="installation" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">📦 Unity Installation</h2>
-            
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h3 class="text-xl font-semibold mb-4">🔧 Prerequisites</h3>
-                <ul class="grid md:grid-cols-2 gap-4">
-                    <li class="flex items-center"><span class="text-blue-500 mr-2">📱</span> Unity 2020.3 LTS or newer</li>
-                    <li class="flex items-center"><span class="text-blue-500 mr-2">🌐</span> Internet connection</li>
-                    <li class="flex items-center"><span class="text-blue-500 mr-2">🎥</span> Camera/microphone permissions</li>
-                    <li class="flex items-center"><span class="text-blue-500 mr-2">🔒</span> HTTPS for WebRTC</li>
-                </ul>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <h3 class="text-xl font-semibold mb-4">📂 Project Setup</h3>
-                <ol class="space-y-4">
-                    <li class="flex">
-                        <span class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-4 mt-1">1</span>
-                        <div>
-                            <strong>Download SDK Package</strong>
-                            <p class="text-gray-600">Contact us to get the Unity package (.unitypackage file)</p>
-                        </div>
-                    </li>
-                    <li class="flex">
-                        <span class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-4 mt-1">2</span>
-                        <div>
-                            <strong>Import Package</strong>
-                            <p class="text-gray-600">Assets → Import Package → Custom Package → Select our .unitypackage</p>
-                        </div>
-                    </li>
-                    <li class="flex">
-                        <span class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-4 mt-1">3</span>
-                        <div>
-                            <strong>Add SDK Script</strong>
-                            <p class="text-gray-600">Copy the CustomVideoSDK.cs script to your Unity project</p>
-                        </div>
-                    </li>
-                    <li class="flex">
-                        <span class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-4 mt-1">4</span>
-                        <div>
-                            <strong>Configure Player Settings</strong>
-                            <p class="text-gray-600">Enable internet permissions and camera/microphone access</p>
-                        </div>
-                    </li>
-                </ol>
             </div>
         </section>
 
         <!-- Unity Integration Section -->
-        <section id="integration" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">🎮 Unity Integration</h2>
+        <section id="integration" class="mb-20">
+            <h2 class="text-4xl font-bold mb-12 text-center section-title">🎮 Unity Integration</h2>
 
             <!-- Basic Setup -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h3 class="text-xl font-semibold mb-4">🏗️ Basic Setup (Identical to Agora)</h3>
-                <div class="code-block">
-using UnityEngine;
+            <div class="card p-8 mb-8">
+                <h3 class="text-2xl font-semibold mb-6">🏗️ Basic Setup (Identical to Agora)</h3>
+                <div class="code-block">using UnityEngine;
 using CustomVideoSDK;
 
 public class VideoCallManager : MonoBehaviour 
@@ -219,58 +351,58 @@ public class VideoCallManager : MonoBehaviour
             </div>
 
             <!-- Testing Section -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h3 class="text-xl font-semibold mb-4">🧪 Testing Endpoints</h3>
-                <p class="text-gray-600 mb-4">Use these URLs to test server functionality:</p>
-                <div class="grid gap-4">
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <span class="font-medium">Health Check</span>
-                            <div class="text-sm text-gray-600">Server status and uptime</div>
+            <div class="card p-8">
+                <h3 class="text-2xl font-semibold mb-6">🧪 Testing Endpoints</h3>
+                <p class="text-gray-600 mb-8 text-lg">Use these URLs to test server functionality:</p>
+                <div class="grid gap-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
+                        <div class="mb-4 sm:mb-0">
+                            <span class="font-semibold text-lg block">Health Check</span>
+                            <div class="text-gray-600">Server status and uptime</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/health" target="_blank" 
-                           class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors">
-                            Test Health
+                           class="test-button bg-green-500 text-white hover:bg-green-600">
+                            🏥 Test Health
                         </a>
                     </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <span class="font-medium">API Information</span>
-                            <div class="text-sm text-gray-600">SDK version and features</div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
+                        <div class="mb-4 sm:mb-0">
+                            <span class="font-semibold text-lg block">API Information</span>
+                            <div class="text-gray-600">SDK version and features</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/api/info" target="_blank" 
-                           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-                            Test API
+                           class="test-button bg-blue-500 text-white hover:bg-blue-600">
+                            📊 Test API
                         </a>
                     </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <span class="font-medium">Host Dashboard</span>
-                            <div class="text-sm text-gray-600">Stream hosting interface</div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
+                        <div class="mb-4 sm:mb-0">
+                            <span class="font-semibold text-lg block">Host Dashboard</span>
+                            <div class="text-gray-600">Stream hosting interface</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/host.html" target="_blank" 
-                           class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors">
-                            Test Host
+                           class="test-button bg-purple-500 text-white hover:bg-purple-600">
+                            🎮 Test Host
                         </a>
                     </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <span class="font-medium">Client Viewer</span>
-                            <div class="text-sm text-gray-600">Stream viewing interface</div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
+                        <div class="mb-4 sm:mb-0">
+                            <span class="font-semibold text-lg block">Client Viewer</span>
+                            <div class="text-gray-600">Stream viewing interface</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/client.html" target="_blank" 
-                           class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition-colors">
-                            Test Client
+                           class="test-button bg-indigo-500 text-white hover:bg-indigo-600">
+                            📺 Test Client
                         </a>
                     </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <span class="font-medium">Debug Tools</span>
-                            <div class="text-sm text-gray-600">Connection diagnostics</div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
+                        <div class="mb-4 sm:mb-0">
+                            <span class="font-semibold text-lg block">Debug Tools</span>
+                            <div class="text-gray-600">Connection diagnostics</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/debug.html" target="_blank" 
-                           class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors">
-                            Test Debug
+                           class="test-button bg-orange-500 text-white hover:bg-orange-600">
+                            🔧 Test Debug
                         </a>
                     </div>
                 </div>
@@ -278,15 +410,14 @@ public class VideoCallManager : MonoBehaviour
         </section>
 
         <!-- Configuration Examples -->
-        <section id="configuration" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">⚙️ Configuration Examples</h2>
+        <section id="configuration" class="mb-20">
+            <h2 class="text-4xl font-bold mb-12 text-center section-title">⚙️ Configuration Examples</h2>
             
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid md:grid-cols-2 gap-8">
                 <!-- Video Only -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4 text-primary">📹 Video-Only Mode</h3>
-                    <div class="code-block text-sm">
-// Video streaming without audio
+                <div class="card p-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">📹 Video-Only Mode</h3>
+                    <div class="code-block">// Video streaming without audio
 rtcEngine = CustomVideoSDK.GetEngine(appId, serverUrl);
 rtcEngine.EnableVideo();
 rtcEngine.DisableAudio(); // Disable audio
@@ -303,10 +434,9 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
                 </div>
 
                 <!-- Audio Only -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4 text-primary">🎤 Audio-Only Mode</h3>
-                    <div class="code-block text-sm">
-// Voice chat without video
+                <div class="card p-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">🎤 Audio-Only Mode</h3>
+                    <div class="code-block">// Voice chat without video
 rtcEngine = CustomVideoSDK.GetEngine(appId, serverUrl);
 rtcEngine.EnableAudio();
 rtcEngine.DisableVideo(); // Disable video
@@ -322,23 +452,37 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
             </div>
         </section>
 
+        <!-- Testing Results -->
+        <section id="testing" class="mb-20">
+            <h2 class="text-4xl font-bold mb-12 text-center section-title">🧪 Live Testing</h2>
+            <div class="card p-8">
+                <h3 class="text-2xl font-semibold mb-6">📊 Endpoint Status</h3>
+                <div id="endpoint-status" class="grid gap-4">
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <span class="font-medium">Loading endpoint status...</span>
+                        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Support Section -->
         <section class="mb-16">
-            <div class="gradient-bg text-white rounded-lg p-8 text-center">
-                <h2 class="text-2xl font-bold mb-4">🎯 Ready to Integrate?</h2>
-                <p class="text-lg mb-6">Start building amazing video experiences in Unity with our SDK</p>
-                <div class="grid md:grid-cols-3 gap-4 text-sm">
-                    <div class="bg-white bg-opacity-20 rounded-lg p-4">
-                        <h3 class="font-semibold mb-2">🚀 Quick Start</h3>
-                        <p>Get up and running in under 30 minutes</p>
+            <div class="gradient-bg text-white rounded-2xl p-12 text-center">
+                <h2 class="text-3xl font-bold mb-6">🎯 Ready to Integrate?</h2>
+                <p class="text-xl mb-8 opacity-90">Start building amazing video experiences in Unity with our SDK</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
+                        <h3 class="font-semibold mb-3 text-lg">🚀 Quick Start</h3>
+                        <p class="opacity-90">Get up and running in under 30 minutes</p>
                     </div>
-                    <div class="bg-white bg-opacity-20 rounded-lg p-4">
-                        <h3 class="font-semibold mb-2">📖 Documentation</h3>
-                        <p>Comprehensive guides and examples</p>
+                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
+                        <h3 class="font-semibold mb-3 text-lg">📖 Documentation</h3>
+                        <p class="opacity-90">Comprehensive guides and examples</p>
                     </div>
-                    <div class="bg-white bg-opacity-20 rounded-lg p-4">
-                        <h3 class="font-semibold mb-2">🛠️ Support</h3>
-                        <p>Developer support and assistance</p>
+                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
+                        <h3 class="font-semibold mb-3 text-lg">🛠️ Support</h3>
+                        <p class="opacity-90">Developer support and assistance</p>
                     </div>
                 </div>
             </div>
@@ -346,18 +490,18 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
+    <footer class="bg-gray-900 text-white py-12">
         <div class="container mx-auto px-6 text-center">
-            <p class="text-lg font-semibold mb-2">🎮 Custom Video SDK for Unity</p>
-            <p class="text-gray-400">Self-hosted • Cost-effective • Developer-friendly</p>
-            <div class="mt-4 space-y-2">
-                <p class="text-sm">Server: <span class="text-blue-400">videosdk.genisisserver.space</span></p>
-                <p class="text-sm">Status: <span class="text-green-400">● Online</span></p>
+            <p class="text-2xl font-semibold mb-4">🎮 Custom Video SDK for Unity</p>
+            <p class="text-gray-400 text-lg mb-6">Self-hosted • Cost-effective • Developer-friendly</p>
+            <div class="space-y-3">
+                <p class="font-mono">Server: <span class="text-blue-400">videosdk.genisisserver.space</span></p>
+                <p>Status: <span id="server-status" class="text-green-400">● Checking...</span></p>
             </div>
         </div>
     </footer>
 
-    <!-- Smooth Scrolling Script -->
+    <!-- JavaScript -->
     <script>
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -373,23 +517,100 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
             });
         });
 
-        // Test all endpoints
-        function testAllEndpoints() {
+        // Test all endpoints and update status
+        async function testAllEndpoints() {
             const endpoints = [
-                'https://videosdk.genisisserver.space/health',
-                'https://videosdk.genisisserver.space/api/info'
+                { name: 'Health Check', url: 'https://videosdk.genisisserver.space/health', icon: '🏥' },
+                { name: 'API Info', url: 'https://videosdk.genisisserver.space/api/info', icon: '📊' },
+                { name: 'Host Dashboard', url: 'https://videosdk.genisisserver.space/host.html', icon: '🎮' },
+                { name: 'Client Viewer', url: 'https://videosdk.genisisserver.space/client.html', icon: '📺' },
+                { name: 'Debug Tools', url: 'https://videosdk.genisisserver.space/debug.html', icon: '🔧' }
             ];
             
-            endpoints.forEach(url => {
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => console.log(`✅ ${url}:`, data))
-                    .catch(error => console.error(`❌ ${url}:`, error));
-            });
+            const statusContainer = document.getElementById('endpoint-status');
+            statusContainer.innerHTML = '';
+            
+            for (const endpoint of endpoints) {
+                const statusDiv = document.createElement('div');
+                statusDiv.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg';
+                statusDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">${endpoint.icon}</span>
+                        <span class="font-medium">${endpoint.name}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600 mr-2"></div>
+                        <span class="text-sm text-gray-600">Testing...</span>
+                    </div>
+                `;
+                statusContainer.appendChild(statusDiv);
+                
+                try {
+                    const response = await fetch(endpoint.url, { method: 'HEAD' });
+                    const status = response.ok ? 'online' : 'error';
+                    const statusText = response.ok ? '● Online' : '● Error';
+                    const statusColor = response.ok ? 'text-green-500' : 'text-red-500';
+                    
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">${endpoint.icon}</span>
+                            <span class="font-medium">${endpoint.name}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="${statusColor} font-medium">${statusText}</span>
+                            <a href="${endpoint.url}" target="_blank" class="ml-3 text-primary-600 hover:text-primary-700 text-sm font-medium">Test →</a>
+                        </div>
+                    `;
+                } catch (error) {
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">${endpoint.icon}</span>
+                            <span class="font-medium">${endpoint.name}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-red-500 font-medium">● Offline</span>
+                            <a href="${endpoint.url}" target="_blank" class="ml-3 text-primary-600 hover:text-primary-700 text-sm font-medium">Try →</a>
+                        </div>
+                    `;
+                }
+            }
         }
 
-        // Auto-test endpoints on page load
-        window.addEventListener('load', testAllEndpoints);
+        // Update server status
+        async function updateServerStatus() {
+            try {
+                const response = await fetch('https://videosdk.genisisserver.space/health');
+                const statusElement = document.getElementById('server-status');
+                
+                if (response.ok) {
+                    statusElement.innerHTML = '● Online';
+                    statusElement.className = 'text-green-400';
+                } else {
+                    statusElement.innerHTML = '● Error';
+                    statusElement.className = 'text-red-400';
+                }
+            } catch (error) {
+                const statusElement = document.getElementById('server-status');
+                statusElement.innerHTML = '● Offline';
+                statusElement.className = 'text-red-400';
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            testAllEndpoints();
+            updateServerStatus();
+        });
+
+        // Add loading animation for code blocks
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('mouseenter', () => {
+                block.style.transform = 'scale(1.01)';
+            });
+            block.addEventListener('mouseleave', () => {
+                block.style.transform = 'scale(1)';
+            });
+        });
     </script>
 </body>
 </html> 
