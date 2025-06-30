@@ -11,30 +11,58 @@
     <!-- Google Fonts for better typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                        'mono': ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
+                        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
                     },
                     colors: {
                         primary: {
                             50: '#f0f4ff',
                             100: '#e0eaff',
+                            200: '#c7d8ff',
+                            300: '#a4bcff',
+                            400: '#8197ff',
                             500: '#667eea',
                             600: '#5a6fd8',
                             700: '#4c5bc7',
+                            800: '#3d46a0',
                             900: '#2d3682'
                         },
                         secondary: {
-                            500: '#764ba2',
-                            600: '#6b4190',
-                            700: '#5d377e'
+                            50: '#f8f4ff',
+                            100: '#ede9ff',
+                            200: '#ddd6ff',
+                            300: '#c4b5ff',
+                            400: '#a890ff',
+                            500: '#8b5cf6',
+                            600: '#764ba2',
+                            700: '#6b4190',
+                            800: '#5d377e',
+                            900: '#4c2c6b'
+                        },
+                        gray: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827'
                         }
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                        '88': '22rem',
+                        '128': '32rem'
                     }
                 }
             }
@@ -43,121 +71,291 @@
     
     <style>
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-feature-settings: 'cv11', 'ss01';
+            line-height: 1.6;
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
         }
         
-        .code-block {
-            background: #0d1117;
-            color: #e6edf3;
-            border-radius: 12px;
-            padding: 24px;
-            overflow-x: auto;
-            font-family: 'JetBrains Mono', Monaco, Consolas, monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            border: 1px solid #30363d;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-        
-        .code-block::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .code-block::-webkit-scrollbar-track {
-            background: #21262d;
-            border-radius: 4px;
-        }
-        
-        .code-block::-webkit-scrollbar-thumb {
-            background: #484f58;
-            border-radius: 4px;
-        }
-        
-        .code-block::-webkit-scrollbar-thumb:hover {
-            background: #656c76;
-        }
-        
-        .highlight { 
-            background: #fbbf24; 
-            color: #000; 
-            padding: 3px 6px; 
-            border-radius: 6px; 
-            font-weight: 600;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s ease;
-        }
-        
-        .card:hover {
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .nav-link {
-            transition: all 0.2s ease;
-            border-radius: 8px;
-            padding: 8px 16px;
-        }
-        
-        .nav-link:hover {
-            background: #f3f4f6;
-            transform: translateY(-1px);
-        }
-        
-        .test-button {
-            transition: all 0.2s ease;
-            font-weight: 500;
-            border-radius: 8px;
-            padding: 12px 20px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .test-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
-        }
-        
-        .section-title {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea, #764ba2, #8b5cf6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
+        .code-block {
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            color: #e6edf3;
+            border-radius: 16px;
+            padding: 32px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+            font-size: 15px;
+            line-height: 1.7;
+            border: 1px solid #30363d;
+            box-shadow: 0 8px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #8b5cf6);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .code-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px -5px rgb(0 0 0 / 0.15), 0 10px 15px -6px rgb(0 0 0 / 0.1);
+        }
+        
+        .code-block::-webkit-scrollbar {
+            height: 10px;
+        }
+        
+        .code-block::-webkit-scrollbar-track {
+            background: #21262d;
+            border-radius: 6px;
+        }
+        
+        .code-block::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 6px;
+        }
+        
+        .code-block::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(90deg, #5a6fd8, #6b4190);
+        }
+        
+        .highlight { 
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000; 
+            padding: 4px 8px; 
+            border-radius: 8px; 
+            font-weight: 600;
+            text-shadow: none;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.4), transparent);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgb(0 0 0 / 0.12), 0 8px 20px rgb(0 0 0 / 0.08);
+            border-color: rgba(102, 126, 234, 0.2);
+        }
+        
+        .nav-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .nav-link:hover {
+            background: rgba(102, 126, 234, 0.08);
+            transform: translateY(-2px);
+            color: #4c5bc7;
+        }
+        
+        .test-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            border-radius: 14px;
+            padding: 16px 28px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .test-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .test-button:hover::before {
+            left: 100%;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgb(0 0 0 / 0.15);
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #667eea, #764ba2, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+        }
+        
+        .hero-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .tech-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-icon-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .tech-icon-2 { background: linear-gradient(135deg, #764ba2, #8b5cf6); }
+        .tech-icon-3 { background: linear-gradient(135deg, #8b5cf6, #667eea); }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-online { background: #10b981; }
+        .status-error { background: #ef4444; }
+        .status-loading { background: #6b7280; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
         @media (max-width: 768px) {
             .code-block {
-                padding: 16px;
-                font-size: 12px;
+                padding: 24px 20px;
+                font-size: 13px;
+                border-radius: 12px;
             }
+            
+            .card {
+                border-radius: 16px;
+            }
+            
+            .test-button {
+                padding: 14px 20px;
+                font-size: 14px;
+            }
+        }
+        
+        .container {
+            max-width: 1280px;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-800 font-sans">
     <!-- Header -->
-    <div class="gradient-bg text-white py-20">
-        <div class="container mx-auto px-6 text-center">
-            <div class="max-w-4xl mx-auto">
-                <h1 class="text-5xl md:text-7xl font-bold mb-6">🎮 Custom Video SDK</h1>
-                <p class="text-2xl md:text-3xl mb-8 font-medium">Unity Integration Guide</p>
-                <p class="text-lg md:text-xl opacity-90 leading-relaxed">
+    <div class="gradient-bg text-white py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-10"></div>
+        <div class="container mx-auto px-8 text-center relative z-10">
+            <div class="max-w-5xl mx-auto">
+                <div class="animate-float">
+                    <h1 class="text-6xl md:text-8xl font-black mb-8 tracking-tight">
+                        🎮 Custom Video SDK
+                    </h1>
+                </div>
+                <p class="text-3xl md:text-4xl mb-6 font-bold opacity-95">Unity Integration Guide</p>
+                <p class="text-xl md:text-2xl opacity-90 leading-relaxed mb-12 max-w-4xl mx-auto">
                     Self-hosted, powerful video calling SDK built for Unity developers.<br>
-                    Drop-in replacement for Agora with full source code control.
+                    <span class="font-semibold">Drop-in replacement for Agora</span> with full source code control.
                 </p>
-                <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="#overview" class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                <div class="flex flex-col sm:flex-row justify-center gap-6 mb-8">
+                    <a href="#overview" class="hero-card px-10 py-4 text-lg font-bold hover:text-white transition-all duration-300">
                         📋 Get Started
                     </a>
-                    <a href="#testing" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
+                    <a href="#testing" class="hero-card px-10 py-4 text-lg font-bold hover:text-white transition-all duration-300">
                         🧪 Test Endpoints
                     </a>
                 </div>
@@ -166,65 +364,65 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-200">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-center space-x-2 md:space-x-6 py-4 overflow-x-auto">
-                <a href="#overview" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Overview</a>
-                <a href="#techstack" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Tech Stack</a>
-                <a href="#integration" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Unity Integration</a>
-                <a href="#configuration" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Configuration</a>
-                <a href="#testing" class="nav-link text-primary-600 hover:text-primary-700 font-medium whitespace-nowrap">Testing</a>
+    <nav class="bg-white/80 backdrop-blur-xl shadow-xl sticky top-0 z-50 border-b border-gray-200/50">
+        <div class="container mx-auto px-8">
+            <div class="flex justify-center space-x-2 md:space-x-4 py-6 overflow-x-auto">
+                <a href="#overview" class="nav-link text-primary-600 hover:text-primary-700 whitespace-nowrap">Overview</a>
+                <a href="#techstack" class="nav-link text-primary-600 hover:text-primary-700 whitespace-nowrap">Tech Stack</a>
+                <a href="#integration" class="nav-link text-primary-600 hover:text-primary-700 whitespace-nowrap">Unity Integration</a>
+                <a href="#configuration" class="nav-link text-primary-600 hover:text-primary-700 whitespace-nowrap">Configuration</a>
+                <a href="#testing" class="nav-link text-primary-600 hover:text-primary-700 whitespace-nowrap">Testing</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-6 py-16">
+    <div class="container mx-auto px-8 py-24">
         <!-- Overview Section -->
-        <section id="overview" class="mb-20">
-            <h2 class="text-4xl font-bold mb-12 text-center section-title">📋 Overview</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="card p-8">
-                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">🚀 Why Custom Video SDK?</h3>
-                    <ul class="space-y-4">
+        <section id="overview" class="mb-32">
+            <h2 class="text-5xl font-black mb-16 text-center section-title">📋 Overview</h2>
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="card p-12">
+                    <h3 class="text-3xl font-bold mb-10 text-primary-700">🚀 Why Custom Video SDK?</h3>
+                    <ul class="space-y-6">
                         <li class="flex items-center text-lg">
-                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            <div class="feature-icon">✓</div>
                             <span class="highlight">100% Agora-compatible API</span>
                         </li>
                         <li class="flex items-center text-lg">
-                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            <div class="feature-icon">✓</div>
                             Self-hosted solution
                         </li>
                         <li class="flex items-center text-lg">
-                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            <div class="feature-icon">✓</div>
                             Full source code control
                         </li>
                         <li class="flex items-center text-lg">
-                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            <div class="feature-icon">✓</div>
                             90% cost reduction
                         </li>
                         <li class="flex items-center text-lg">
-                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            <div class="feature-icon">✓</div>
                             No usage limits
                         </li>
                         <li class="flex items-center text-lg">
-                            <span class="text-green-500 mr-4 text-xl">✅</span> 
+                            <div class="feature-icon">✓</div>
                             Mobile game optimized
                         </li>
                     </ul>
                 </div>
-                <div class="card p-8">
-                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">💰 Cost Comparison</h3>
-                    <div class="space-y-6">
-                        <div class="flex justify-between items-center p-4 bg-red-50 rounded-lg border border-red-200">
-                            <span class="font-semibold text-lg">Agora SDK</span>
-                            <span class="text-red-600 font-bold text-xl">$200+ /month</span>
+                <div class="card p-12">
+                    <h3 class="text-3xl font-bold mb-10 text-primary-700">💰 Cost Comparison</h3>
+                    <div class="space-y-8">
+                        <div class="flex justify-between items-center p-6 bg-red-50 rounded-2xl border-2 border-red-200">
+                            <span class="font-bold text-xl">Agora SDK</span>
+                            <span class="text-red-600 font-black text-2xl">$200+ /month</span>
                         </div>
-                        <div class="flex justify-between items-center p-4 bg-green-50 rounded-lg border border-green-200">
-                            <span class="font-semibold text-lg">Custom SDK</span>
-                            <span class="text-green-600 font-bold text-xl">$5-20 /month</span>
+                        <div class="flex justify-between items-center p-6 bg-green-50 rounded-2xl border-2 border-green-200">
+                            <span class="font-bold text-xl">Custom SDK</span>
+                            <span class="text-green-600 font-black text-2xl">$5-20 /month</span>
                         </div>
-                        <div class="text-center text-gray-600 font-medium">
-                            * Based on VPS hosting costs
+                        <div class="text-center text-gray-600 font-semibold text-lg">
+                            💡 Based on VPS hosting costs
                         </div>
                     </div>
                 </div>
@@ -232,83 +430,83 @@
         </section>
 
         <!-- Tech Stack Section -->
-        <section id="techstack" class="mb-20">
-            <h2 class="text-4xl font-bold mb-12 text-center section-title">🛠️ Technology Stack</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="card p-8 text-center">
-                    <div class="text-4xl mb-4">⚡</div>
-                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">Backend</h3>
-                    <ul class="space-y-3 text-left">
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+        <section id="techstack" class="mb-32">
+            <h2 class="text-5xl font-black mb-16 text-center section-title">🛠️ Technology Stack</h2>
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="card p-12 text-center">
+                    <div class="tech-icon tech-icon-1 text-white">⚡</div>
+                    <h3 class="text-3xl font-bold mb-8 text-primary-700">Backend</h3>
+                    <ul class="space-y-4 text-left">
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-500 rounded-full mr-4"></div>
                             <strong>Node.js</strong> - Server runtime
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-500 rounded-full mr-4"></div>
                             <strong>Express.js</strong> - Web framework
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-500 rounded-full mr-4"></div>
                             <strong>Socket.IO</strong> - Real-time communication
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-500 rounded-full mr-4"></div>
                             <strong>WebRTC</strong> - Video/audio streaming
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-500 rounded-full mr-4"></div>
                             <strong>PM2</strong> - Process management
                         </li>
                     </ul>
                 </div>
-                <div class="card p-8 text-center">
-                    <div class="text-4xl mb-4">🏗️</div>
-                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">Infrastructure</h3>
-                    <ul class="space-y-3 text-left">
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                <div class="card p-12 text-center">
+                    <div class="tech-icon tech-icon-2 text-white">🏗️</div>
+                    <h3 class="text-3xl font-bold mb-8 text-primary-700">Infrastructure</h3>
+                    <ul class="space-y-4 text-left">
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-secondary-500 rounded-full mr-4"></div>
                             <strong>Nginx</strong> - Reverse proxy
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-secondary-500 rounded-full mr-4"></div>
                             <strong>SSL/TLS</strong> - Security
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-secondary-500 rounded-full mr-4"></div>
                             <strong>VPS Hosting</strong> - Self-hosted
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-secondary-500 rounded-full mr-4"></div>
                             <strong>Auto-scaling</strong> - PM2 clusters
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-secondary-500 rounded-full mr-4"></div>
                             <strong>Load balancing</strong> - Built-in
                         </li>
                     </ul>
                 </div>
-                <div class="card p-8 text-center">
-                    <div class="text-4xl mb-4">🎮</div>
-                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">Unity Client</h3>
-                    <ul class="space-y-3 text-left">
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                <div class="card p-12 text-center">
+                    <div class="tech-icon tech-icon-3 text-white">🎮</div>
+                    <h3 class="text-3xl font-bold mb-8 text-primary-700">Unity Client</h3>
+                    <ul class="space-y-4 text-left">
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-700 rounded-full mr-4"></div>
                             <strong>C# SDK</strong> - Native integration
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-700 rounded-full mr-4"></div>
                             <strong>WebRTC Unity</strong> - Video handling
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-700 rounded-full mr-4"></div>
                             <strong>JSON API</strong> - Data exchange
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-700 rounded-full mr-4"></div>
                             <strong>Event-driven</strong> - Callbacks
                         </li>
-                        <li class="flex items-center">
-                            <span class="w-2 h-2 bg-primary-700 rounded-full mr-3"></span>
+                        <li class="flex items-center text-lg">
+                            <div class="w-3 h-3 bg-primary-700 rounded-full mr-4"></div>
                             <strong>Cross-platform</strong> - All devices
                         </li>
                     </ul>
@@ -317,12 +515,12 @@
         </section>
 
         <!-- Unity Integration Section -->
-        <section id="integration" class="mb-20">
-            <h2 class="text-4xl font-bold mb-12 text-center section-title">🎮 Unity Integration</h2>
+        <section id="integration" class="mb-32">
+            <h2 class="text-5xl font-black mb-16 text-center section-title">🎮 Unity Integration</h2>
 
             <!-- Basic Setup -->
-            <div class="card p-8 mb-8">
-                <h3 class="text-2xl font-semibold mb-6">🏗️ Basic Setup (Identical to Agora)</h3>
+            <div class="card p-12 mb-12">
+                <h3 class="text-3xl font-bold mb-10">🏗️ Basic Setup (Identical to Agora)</h3>
                 <div class="code-block">using UnityEngine;
 using CustomVideoSDK;
 
@@ -351,58 +549,58 @@ public class VideoCallManager : MonoBehaviour
             </div>
 
             <!-- Testing Section -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-semibold mb-6">🧪 Testing Endpoints</h3>
-                <p class="text-gray-600 mb-8 text-lg">Use these URLs to test server functionality:</p>
-                <div class="grid gap-6">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
-                        <div class="mb-4 sm:mb-0">
-                            <span class="font-semibold text-lg block">Health Check</span>
-                            <div class="text-gray-600">Server status and uptime</div>
+            <div class="card p-12">
+                <h3 class="text-3xl font-bold mb-10">🧪 Testing Endpoints</h3>
+                <p class="text-gray-600 mb-12 text-xl">Use these URLs to test server functionality:</p>
+                <div class="grid gap-8">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-8 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200">
+                        <div class="mb-6 lg:mb-0">
+                            <span class="font-bold text-xl block mb-2">🏥 Health Check</span>
+                            <div class="text-gray-600 text-lg">Server status and uptime monitoring</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/health" target="_blank" 
-                           class="test-button bg-green-500 text-white hover:bg-green-600">
-                            🏥 Test Health
+                           class="test-button bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700">
+                            Test Health
                         </a>
                     </div>
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
-                        <div class="mb-4 sm:mb-0">
-                            <span class="font-semibold text-lg block">API Information</span>
-                            <div class="text-gray-600">SDK version and features</div>
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-8 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200">
+                        <div class="mb-6 lg:mb-0">
+                            <span class="font-bold text-xl block mb-2">📊 API Information</span>
+                            <div class="text-gray-600 text-lg">SDK version and available features</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/api/info" target="_blank" 
-                           class="test-button bg-blue-500 text-white hover:bg-blue-600">
-                            📊 Test API
+                           class="test-button bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700">
+                            Test API
                         </a>
                     </div>
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
-                        <div class="mb-4 sm:mb-0">
-                            <span class="font-semibold text-lg block">Host Dashboard</span>
-                            <div class="text-gray-600">Stream hosting interface</div>
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-8 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200">
+                        <div class="mb-6 lg:mb-0">
+                            <span class="font-bold text-xl block mb-2">🎮 Host Dashboard</span>
+                            <div class="text-gray-600 text-lg">Stream hosting and management interface</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/host.html" target="_blank" 
-                           class="test-button bg-purple-500 text-white hover:bg-purple-600">
-                            🎮 Test Host
+                           class="test-button bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700">
+                            Test Host
                         </a>
                     </div>
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
-                        <div class="mb-4 sm:mb-0">
-                            <span class="font-semibold text-lg block">Client Viewer</span>
-                            <div class="text-gray-600">Stream viewing interface</div>
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-8 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200">
+                        <div class="mb-6 lg:mb-0">
+                            <span class="font-bold text-xl block mb-2">📺 Client Viewer</span>
+                            <div class="text-gray-600 text-lg">Stream viewing and interaction interface</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/client.html" target="_blank" 
-                           class="test-button bg-indigo-500 text-white hover:bg-indigo-600">
-                            📺 Test Client
+                           class="test-button bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:from-indigo-600 hover:to-indigo-700">
+                            Test Client
                         </a>
                     </div>
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-gray-50 rounded-lg border">
-                        <div class="mb-4 sm:mb-0">
-                            <span class="font-semibold text-lg block">Debug Tools</span>
-                            <div class="text-gray-600">Connection diagnostics</div>
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-8 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200">
+                        <div class="mb-6 lg:mb-0">
+                            <span class="font-bold text-xl block mb-2">🔧 Debug Tools</span>
+                            <div class="text-gray-600 text-lg">Connection diagnostics and troubleshooting</div>
                         </div>
                         <a href="https://videosdk.genisisserver.space/debug.html" target="_blank" 
-                           class="test-button bg-orange-500 text-white hover:bg-orange-600">
-                            🔧 Test Debug
+                           class="test-button bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700">
+                            Test Debug
                         </a>
                     </div>
                 </div>
@@ -410,13 +608,13 @@ public class VideoCallManager : MonoBehaviour
         </section>
 
         <!-- Configuration Examples -->
-        <section id="configuration" class="mb-20">
-            <h2 class="text-4xl font-bold mb-12 text-center section-title">⚙️ Configuration Examples</h2>
+        <section id="configuration" class="mb-32">
+            <h2 class="text-5xl font-black mb-16 text-center section-title">⚙️ Configuration Examples</h2>
             
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid lg:grid-cols-2 gap-12">
                 <!-- Video Only -->
-                <div class="card p-8">
-                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">📹 Video-Only Mode</h3>
+                <div class="card p-12">
+                    <h3 class="text-3xl font-bold mb-10 text-primary-700">📹 Video-Only Mode</h3>
                     <div class="code-block">// Video streaming without audio
 rtcEngine = CustomVideoSDK.GetEngine(appId, serverUrl);
 rtcEngine.EnableVideo();
@@ -434,8 +632,8 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
                 </div>
 
                 <!-- Audio Only -->
-                <div class="card p-8">
-                    <h3 class="text-2xl font-semibold mb-6 text-primary-700">🎤 Audio-Only Mode</h3>
+                <div class="card p-12">
+                    <h3 class="text-3xl font-bold mb-10 text-primary-700">🎤 Audio-Only Mode</h3>
                     <div class="code-block">// Voice chat without video
 rtcEngine = CustomVideoSDK.GetEngine(appId, serverUrl);
 rtcEngine.EnableAudio();
@@ -453,36 +651,39 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
         </section>
 
         <!-- Testing Results -->
-        <section id="testing" class="mb-20">
-            <h2 class="text-4xl font-bold mb-12 text-center section-title">🧪 Live Testing</h2>
-            <div class="card p-8">
-                <h3 class="text-2xl font-semibold mb-6">📊 Endpoint Status</h3>
-                <div id="endpoint-status" class="grid gap-4">
-                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <span class="font-medium">Loading endpoint status...</span>
-                        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+        <section id="testing" class="mb-32">
+            <h2 class="text-5xl font-black mb-16 text-center section-title">🧪 Live Testing</h2>
+            <div class="card p-12">
+                <h3 class="text-3xl font-bold mb-10">📊 Endpoint Status</h3>
+                <div id="endpoint-status" class="grid gap-6">
+                    <div class="flex items-center justify-between p-6 bg-gray-50 rounded-xl border">
+                        <span class="font-semibold text-lg">Loading endpoint status...</span>
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Support Section -->
-        <section class="mb-16">
-            <div class="gradient-bg text-white rounded-2xl p-12 text-center">
-                <h2 class="text-3xl font-bold mb-6">🎯 Ready to Integrate?</h2>
-                <p class="text-xl mb-8 opacity-90">Start building amazing video experiences in Unity with our SDK</p>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
-                        <h3 class="font-semibold mb-3 text-lg">🚀 Quick Start</h3>
-                        <p class="opacity-90">Get up and running in under 30 minutes</p>
-                    </div>
-                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
-                        <h3 class="font-semibold mb-3 text-lg">📖 Documentation</h3>
-                        <p class="opacity-90">Comprehensive guides and examples</p>
-                    </div>
-                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
-                        <h3 class="font-semibold mb-3 text-lg">🛠️ Support</h3>
-                        <p class="opacity-90">Developer support and assistance</p>
+        <section class="mb-20">
+            <div class="gradient-bg text-white rounded-3xl p-16 text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-black opacity-10"></div>
+                <div class="relative z-10">
+                    <h2 class="text-4xl font-black mb-8">🎯 Ready to Integrate?</h2>
+                    <p class="text-2xl mb-12 opacity-90">Start building amazing video experiences in Unity with our SDK</p>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="hero-card p-8">
+                            <h3 class="font-bold mb-4 text-xl">🚀 Quick Start</h3>
+                            <p class="opacity-90">Get up and running in under 30 minutes</p>
+                        </div>
+                        <div class="hero-card p-8">
+                            <h3 class="font-bold mb-4 text-xl">📖 Documentation</h3>
+                            <p class="opacity-90">Comprehensive guides and examples</p>
+                        </div>
+                        <div class="hero-card p-8">
+                            <h3 class="font-bold mb-4 text-xl">🛠️ Support</h3>
+                            <p class="opacity-90">Developer support and assistance</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -490,13 +691,13 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-6 text-center">
-            <p class="text-2xl font-semibold mb-4">🎮 Custom Video SDK for Unity</p>
-            <p class="text-gray-400 text-lg mb-6">Self-hosted • Cost-effective • Developer-friendly</p>
-            <div class="space-y-3">
-                <p class="font-mono">Server: <span class="text-blue-400">videosdk.genisisserver.space</span></p>
-                <p>Status: <span id="server-status" class="text-green-400">● Checking...</span></p>
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-8 text-center">
+            <p class="text-3xl font-bold mb-6">🎮 Custom Video SDK for Unity</p>
+            <p class="text-gray-400 text-xl mb-8">Self-hosted • Cost-effective • Developer-friendly</p>
+            <div class="space-y-4">
+                <p class="font-mono text-lg">Server: <span class="text-blue-400 font-bold">videosdk.genisisserver.space</span></p>
+                <p class="text-lg">Status: <span id="server-status" class="text-green-400 font-semibold">● Checking...</span></p>
             </div>
         </div>
     </footer>
@@ -532,15 +733,15 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
             
             for (const endpoint of endpoints) {
                 const statusDiv = document.createElement('div');
-                statusDiv.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg';
+                statusDiv.className = 'flex items-center justify-between p-6 bg-gray-50 rounded-xl border transition-all duration-300';
                 statusDiv.innerHTML = `
                     <div class="flex items-center">
-                        <span class="text-2xl mr-3">${endpoint.icon}</span>
-                        <span class="font-medium">${endpoint.name}</span>
+                        <span class="text-3xl mr-4">${endpoint.icon}</span>
+                        <span class="font-semibold text-lg">${endpoint.name}</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600 mr-2"></div>
-                        <span class="text-sm text-gray-600">Testing...</span>
+                        <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-600 mr-3"></div>
+                        <span class="text-gray-600 font-medium">Testing...</span>
                     </div>
                 `;
                 statusContainer.appendChild(statusDiv);
@@ -553,25 +754,38 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
                     
                     statusDiv.innerHTML = `
                         <div class="flex items-center">
-                            <span class="text-2xl mr-3">${endpoint.icon}</span>
-                            <span class="font-medium">${endpoint.name}</span>
+                            <span class="text-3xl mr-4">${endpoint.icon}</span>
+                            <span class="font-semibold text-lg">${endpoint.name}</span>
                         </div>
                         <div class="flex items-center">
-                            <span class="${statusColor} font-medium">${statusText}</span>
-                            <a href="${endpoint.url}" target="_blank" class="ml-3 text-primary-600 hover:text-primary-700 text-sm font-medium">Test →</a>
+                            <div class="status-indicator ${response.ok ? 'status-online' : 'status-error'}"></div>
+                            <span class="${statusColor} font-bold mr-4">${statusText}</span>
+                            <a href="${endpoint.url}" target="_blank" class="text-primary-600 hover:text-primary-700 font-semibold hover:underline">
+                                Test →
+                            </a>
                         </div>
                     `;
+                    
+                    if (response.ok) {
+                        statusDiv.classList.add('bg-green-50', 'border-green-200');
+                    } else {
+                        statusDiv.classList.add('bg-red-50', 'border-red-200');
+                    }
                 } catch (error) {
                     statusDiv.innerHTML = `
                         <div class="flex items-center">
-                            <span class="text-2xl mr-3">${endpoint.icon}</span>
-                            <span class="font-medium">${endpoint.name}</span>
+                            <span class="text-3xl mr-4">${endpoint.icon}</span>
+                            <span class="font-semibold text-lg">${endpoint.name}</span>
                         </div>
                         <div class="flex items-center">
-                            <span class="text-red-500 font-medium">● Offline</span>
-                            <a href="${endpoint.url}" target="_blank" class="ml-3 text-primary-600 hover:text-primary-700 text-sm font-medium">Try →</a>
+                            <div class="status-indicator status-error"></div>
+                            <span class="text-red-500 font-bold mr-4">● Offline</span>
+                            <a href="${endpoint.url}" target="_blank" class="text-primary-600 hover:text-primary-700 font-semibold hover:underline">
+                                Try →
+                            </a>
                         </div>
                     `;
+                    statusDiv.classList.add('bg-red-50', 'border-red-200');
                 }
             }
         }
@@ -584,15 +798,15 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
                 
                 if (response.ok) {
                     statusElement.innerHTML = '● Online';
-                    statusElement.className = 'text-green-400';
+                    statusElement.className = 'text-green-400 font-semibold';
                 } else {
                     statusElement.innerHTML = '● Error';
-                    statusElement.className = 'text-red-400';
+                    statusElement.className = 'text-red-400 font-semibold';
                 }
             } catch (error) {
                 const statusElement = document.getElementById('server-status');
                 statusElement.innerHTML = '● Offline';
-                statusElement.className = 'text-red-400';
+                statusElement.className = 'text-red-400 font-semibold';
             }
         }
 
@@ -602,13 +816,13 @@ rtcEngine.JoinChannelByKey("", channelName, 0);</div>
             updateServerStatus();
         });
 
-        // Add loading animation for code blocks
-        document.querySelectorAll('.code-block').forEach(block => {
-            block.addEventListener('mouseenter', () => {
-                block.style.transform = 'scale(1.01)';
-            });
-            block.addEventListener('mouseleave', () => {
-                block.style.transform = 'scale(1)';
+        // Add parallax effect to header
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.animate-float');
+            parallaxElements.forEach(element => {
+                const speed = 0.5;
+                element.style.transform = `translateY(${scrolled * speed}px)`;
             });
         });
     </script>
